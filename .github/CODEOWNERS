@@ -1,21 +1,109 @@
-# Default owners for everything
+# =============================================================================
+# CODEOWNERS - Defines code ownership and required reviewers
+# =============================================================================
+# When a PR touches files matching a pattern, the listed owners are
+# automatically requested for review. With branch protection enabled,
+# their approval is REQUIRED before merge.
+#
+# Teams should be created in GitHub: Settings → Teams
+# Example: @onelasha/backend-team, @onelasha/frontend-team, @onelasha/platform-team
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Default: Fallback for any file not matched below
+# -----------------------------------------------------------------------------
 * @onelasha
 
-# Backend
+# -----------------------------------------------------------------------------
+# Backend Services (Python + NestJS)
+# Owners: Backend team
+# -----------------------------------------------------------------------------
 /nedlia-back-end/ @onelasha
+# /nedlia-back-end/ @onelasha/backend-team
 
-# Frontend
+# -----------------------------------------------------------------------------
+# Frontend (React)
+# Owners: Frontend team
+# -----------------------------------------------------------------------------
 /nedlia-front-end/ @onelasha
+# /nedlia-front-end/ @onelasha/frontend-team
 
-# Infrastructure
+# -----------------------------------------------------------------------------
+# Infrastructure as Code (Terraform + Terragrunt)
+# ⚠️  RESTRICTED: Only platform/DevOps team can approve IaC changes
+# -----------------------------------------------------------------------------
 /nedlia-IaC/ @onelasha
+# /nedlia-IaC/ @onelasha/platform-team
 
-# SDKs
+# Terraform modules require platform team review
+/nedlia-IaC/modules/ @onelasha
+# /nedlia-IaC/modules/ @onelasha/platform-team
+
+# Environment configs are extra sensitive (production especially)
+/nedlia-IaC/environments/ @onelasha
+# /nedlia-IaC/environments/ @onelasha/platform-team
+
+# -----------------------------------------------------------------------------
+# SDKs (Python, JS, Swift)
+# Owners: SDK/API team
+# -----------------------------------------------------------------------------
 /nedlia-sdk/ @onelasha
+# /nedlia-sdk/ @onelasha/sdk-team
 
-# Plugins
+# -----------------------------------------------------------------------------
+# Native Plugins (SwiftUI)
+# Owners: Mobile/Plugin team
+# -----------------------------------------------------------------------------
 /nedlia-plugin/ @onelasha
+# /nedlia-plugin/ @onelasha/mobile-team
 
+# -----------------------------------------------------------------------------
+# CI/CD and GitHub Configuration
+# ⚠️  RESTRICTED: Only platform team can modify CI/CD
+# -----------------------------------------------------------------------------
+/.github/ @onelasha
+# /.github/ @onelasha/platform-team
+
+/.github/workflows/ @onelasha
+# /.github/workflows/ @onelasha/platform-team
+
+# -----------------------------------------------------------------------------
+# Security-Sensitive Files
+# ⚠️  RESTRICTED: Require security/platform review
+# -----------------------------------------------------------------------------
+/.gitleaks.toml @onelasha
+/.pre-commit-config.yaml @onelasha
+/SECURITY.md @onelasha
+# /.gitleaks.toml @onelasha/security-team @onelasha/platform-team
+# /.pre-commit-config.yaml @onelasha/platform-team
+# /SECURITY.md @onelasha/security-team
+
+# -----------------------------------------------------------------------------
 # Documentation
+# Owners: Anyone can contribute, but docs team reviews
+# -----------------------------------------------------------------------------
 *.md @onelasha
 /docs/ @onelasha
+# *.md @onelasha/docs-team
+# /docs/ @onelasha/docs-team
+
+# Architecture docs require architect review
+/ARCHITECTURE.md @onelasha
+/docs/adr/ @onelasha
+# /ARCHITECTURE.md @onelasha/architects
+# /docs/adr/ @onelasha/architects
+
+# -----------------------------------------------------------------------------
+# Root Config Files
+# ⚠️  RESTRICTED: Changes affect entire monorepo
+# -----------------------------------------------------------------------------
+/package.json @onelasha
+/pnpm-workspace.yaml @onelasha
+/tsconfig.base.json @onelasha
+/.eslintrc.js @onelasha
+/.prettierrc @onelasha
+/ruff.toml @onelasha
+/Makefile @onelasha
+# These should require platform team when teams are set up:
+# /package.json @onelasha/platform-team
+# /pnpm-workspace.yaml @onelasha/platform-team

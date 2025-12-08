@@ -1,0 +1,190 @@
+name: PR Scope Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-scope:
+    name: Check PR Scope
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files_yaml: |
+            backend:
+              - 'nedlia-back-end/**'
+            frontend:
+              - 'nedlia-front-end/**'
+            iac:
+              - 'nedlia-IaC/**'
+            sdk:
+              - 'nedlia-sdk/**'
+            plugin:
+              - 'nedlia-plugin/**'
+            ci:
+              - '.github/**'
+            docs:
+              - 'docs/**'
+              - '*.md'
+            config:
+              - 'package.json'
+              - 'pnpm-workspace.yaml'
+              - 'tsconfig.base.json'
+              - '.eslintrc.js'
+              - '.prettierrc'
+              - 'ruff.toml'
+              - 'Makefile'
+
+      - name: Detect cross-project changes
+        id: detect-cross-project
+        run: |
+          PROJECTS_TOUCHED=0
+          PROJECTS_LIST=""
+
+          if [ "${{ steps.changed-files.outputs.backend_any_changed }}" == "true" ]; then
+            PROJECTS_TOUCHED=$((PROJECTS_TOUCHED + 1))
+            PROJECTS_LIST="${PROJECTS_LIST}backend, "
+          fi
+
+          if [ "${{ steps.changed-files.outputs.frontend_any_changed }}" == "true" ]; then
+            PROJECTS_TOUCHED=$((PROJECTS_TOUCHED + 1))
+            PROJECTS_LIST="${PROJECTS_LIST}frontend, "
+          fi
+
+          if [ "${{ steps.changed-files.outputs.iac_any_changed }}" == "true" ]; then
+            PROJECTS_TOUCHED=$((PROJECTS_TOUCHED + 1))
+            PROJECTS_LIST="${PROJECTS_LIST}iac, "
+          fi
+
+          if [ "${{ steps.changed-files.outputs.sdk_any_changed }}" == "true" ]; then
+            PROJECTS_TOUCHED=$((PROJECTS_TOUCHED + 1))
+            PROJECTS_LIST="${PROJECTS_LIST}sdk, "
+          fi
+
+          if [ "${{ steps.changed-files.outputs.plugin_any_changed }}" == "true" ]; then
+            PROJECTS_TOUCHED=$((PROJECTS_TOUCHED + 1))
+            PROJECTS_LIST="${PROJECTS_LIST}plugin, "
+          fi
+
+          # Remove trailing comma and space
+          PROJECTS_LIST=$(echo "$PROJECTS_LIST" | sed 's/, $//')
+
+          echo "projects_touched=$PROJECTS_TOUCHED" >> $GITHUB_OUTPUT
+          echo "projects_list=$PROJECTS_LIST" >> $GITHUB_OUTPUT
+
+          # Check for IaC changes specifically
+          echo "iac_changed=${{ steps.changed-files.outputs.iac_any_changed }}" >> $GITHUB_OUTPUT
+
+      - name: Warn on cross-project PR
+        if: steps.detect-cross-project.outputs.projects_touched > 1
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const projectsTouched = ${{ steps.detect-cross-project.outputs.projects_touched }};
+            const projectsList = "${{ steps.detect-cross-project.outputs.projects_list }}";
+
+            const warningMessage = `## ⚠️ Cross-Project PR Detected
+
+            This PR touches **${projectsTouched} projects**: ${projectsList}
+
+            ### Recommendation
+            Consider splitting this PR into separate PRs for each project area:
+            - Easier to review
+            - Faster CI feedback
+            - Clearer ownership
+            - Simpler rollback if needed
+
+            ### When cross-project PRs are acceptable:
+            - Coordinated API changes (backend + SDK)
+            - Breaking changes requiring simultaneous updates
+            - Initial feature scaffolding
+
+            If this is intentional, please explain in the PR description why these changes must be together.`;
+
+            // Check if comment already exists
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Cross-Project PR Detected')
+            );
+
+            if (!botComment) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: warningMessage
+              });
+            }
+
+      - name: Warn on IaC changes
+        if: steps.detect-cross-project.outputs.iac_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const warningMessage = `## 🔒 Infrastructure Changes Detected
+
+            This PR modifies files in \`nedlia-IaC/\`.
+
+            ### Requirements:
+            - ✅ Platform team approval required (see CODEOWNERS)
+            - ✅ Terraform plan must be reviewed
+            - ✅ No secrets or sensitive values in code
+
+            ### Checklist for IaC changes:
+            - [ ] Ran \`terragrunt plan\` locally
+            - [ ] No hardcoded secrets or credentials
+            - [ ] Changes are backward compatible (or migration plan provided)
+            - [ ] Updated IaC documentation if needed
+
+            **Note**: Production environment changes require additional approval.`;
+
+            // Check if comment already exists
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Infrastructure Changes Detected')
+            );
+
+            if (!botComment) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: warningMessage
+              });
+            }
+
+      - name: Summary
+        run: |
+          echo "## PR Scope Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Area | Changed |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend | ${{ steps.changed-files.outputs.backend_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend | ${{ steps.changed-files.outputs.frontend_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| IaC | ${{ steps.changed-files.outputs.iac_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| SDK | ${{ steps.changed-files.outputs.sdk_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Plugin | ${{ steps.changed-files.outputs.plugin_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| CI/CD | ${{ steps.changed-files.outputs.ci_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docs | ${{ steps.changed-files.outputs.docs_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Config | ${{ steps.changed-files.outputs.config_any_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Projects touched**: ${{ steps.detect-cross-project.outputs.projects_touched }}" >> $GITHUB_STEP_SUMMARY

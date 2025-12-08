@@ -417,6 +417,58 @@ Webhook secret should be configured via `GITHUB_WEBHOOK_SECRET` env var.
 
 ---
 
+## PR Scope Rules
+
+### Single-Project PRs (Preferred)
+
+Each PR should ideally touch only **one project area**:
+
+| Project  | Path                | Team          |
+| -------- | ------------------- | ------------- |
+| Backend  | `nedlia-back-end/`  | Backend team  |
+| Frontend | `nedlia-front-end/` | Frontend team |
+| IaC      | `nedlia-IaC/`       | Platform team |
+| SDK      | `nedlia-sdk/`       | SDK team      |
+| Plugin   | `nedlia-plugin/`    | Mobile team   |
+
+### Cross-Project PRs
+
+If your PR touches multiple projects, the `pr-scope-check` workflow will:
+
+1. **Warn** with a comment explaining the concern
+2. **List** which projects are affected
+3. **Suggest** splitting into separate PRs
+
+**When cross-project PRs are acceptable**:
+
+- Coordinated API changes (backend + SDK)
+- Breaking changes requiring simultaneous updates
+- Initial feature scaffolding
+
+### Restricted Areas
+
+Some areas require specific team approval (enforced via CODEOWNERS):
+
+| Area                                             | Required Reviewer    | Why                                            |
+| ------------------------------------------------ | -------------------- | ---------------------------------------------- |
+| `nedlia-IaC/`                                    | Platform team        | Infrastructure changes affect all environments |
+| `.github/workflows/`                             | Platform team        | CI/CD changes affect all developers            |
+| `nedlia-IaC/environments/production/`            | Platform team + Lead | Production is critical                         |
+| Security files (`.gitleaks.toml`, `SECURITY.md`) | Security team        | Security policy changes                        |
+
+### IaC Changes
+
+PRs touching `nedlia-IaC/` trigger additional requirements:
+
+1. **Platform team approval** required
+2. **Terraform plan** must be reviewed
+3. **No secrets** in code (use Secrets Manager)
+4. **Backward compatible** or migration plan provided
+
+The `pr-scope-check` workflow will add a checklist comment for IaC PRs.
+
+---
+
 ## Related Documentation
 
 - [Branching Strategy](branching-strategy.md) – Trunk-based development
