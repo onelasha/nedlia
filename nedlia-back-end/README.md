@@ -4,36 +4,50 @@ Backend services for the Nedlia product placement platform.
 
 ## Components
 
-| Component  | Technology      | Purpose                                 |
-| ---------- | --------------- | --------------------------------------- |
-| `api/`     | FastAPI         | REST API (sync requests)                |
-| `workers/` | Python + Lambda | Event-driven workers (async processing) |
-| `shared/`  | Python          | Shared domain models                    |
+| Component   | Technology | Compute | Purpose                                 |
+| ----------- | ---------- | ------- | --------------------------------------- |
+| `api/`      | FastAPI    | Lambda  | REST API gateway (sync requests)        |
+| `workers/`  | Python     | Lambda  | Event-driven workers (async processing) |
+| `services/` | FastAPI    | Fargate | Domain microservices (long-running)     |
+| `shared/`   | Python     | -       | Shared domain models                    |
 
-## Event-Driven Architecture
+## Hybrid Compute Architecture
 
 ```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Plugin    │────▶│     API     │────▶│   Aurora    │
-│   (Swift)   │     │  (FastAPI)  │     │ (PostgreSQL)│
-└─────────────┘     └─────────────┘     └─────────────┘
-                          │
-┌─────────────┐           │ publish        ┌─────────────┐
-│   Portal    │───────────┤───────────────▶│ EventBridge │
-│   (React)   │           │                └──────┬──────┘
-└─────────────┘           │                       │
-                          │              ┌────────┼────────┐
-┌─────────────┐           │              ▼        ▼        ▼
-│  Video SDK  │───────────┘         ┌────────┐ ┌────────┐ ┌────────┐
-│   (JS)      │                     │  SQS   │ │  SQS   │ │  SQS   │
-└─────────────┘                     │ Queue  │ │ Queue  │ │ Queue  │
-                                    └───┬────┘ └───┬────┘ └───┬────┘
-                                        ▼          ▼          ▼
-                                    ┌────────┐ ┌────────┐ ┌────────┐
-                                    │ File   │ │Validate│ │Notify  │
-                                    │ Gen    │ │ Worker │ │ Worker │
-                                    └────────┘ └────────┘ └────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────────────────────────┐│
+│  │   Plugin    │────▶│  API GW +   │────▶│         ECS Cluster             ││
+│  │   (Swift)   │     │   Lambda    │     │  ┌───────────┐ ┌───────────┐    ││
+│  └─────────────┘     │   (API)     │     │  │ Placement │ │Validation │    ││
+│                      └──────┬──────┘     │  │  Service  │ │  Service  │    ││
+│  ┌─────────────┐            │            │  │ (Fargate) │ │ (Fargate) │    ││
+│  │   Portal    │────────────┤            │  └─────┬─────┘ └─────┬─────┘    ││
+│  │   (React)   │            │            └────────┼─────────────┼──────────┘│
+│  └─────────────┘            │                     │             │           │
+│                             │ publish             ▼             ▼           │
+│  ┌─────────────┐            │            ┌─────────────────────────────────┐│
+│  │  Video SDK  │────────────┘            │           Aurora DB             ││
+│  │   (JS)      │                         └─────────────────────────────────┘│
+│  └─────────────┘                                                            │
+│                                                                             │
+│                      ┌─────────────┐     ┌─────────────┐     ┌─────────────┐│
+│                      │ EventBridge │────▶│     SQS     │────▶│   Lambda    ││
+│                      │   (Events)  │     │  (Queues)   │     │  (Workers)  ││
+│                      └─────────────┘     └─────────────┘     └─────────────┘│
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## When to Use Lambda vs Fargate
+
+| Criteria       | Lambda               | Fargate            |
+| -------------- | -------------------- | ------------------ |
+| Execution time | < 15 min             | Long-running       |
+| Traffic        | Sporadic             | Steady             |
+| Connections    | Stateless            | Connection pooling |
+| Cold starts    | Acceptable           | Not acceptable     |
+| Use case       | API Gateway, Workers | Domain services    |
 
 ## Event Flow
 
@@ -71,11 +85,27 @@ Backend services for the Nedlia product placement platform.
 ## Setup (Local Development)
 
 ```bash
-# API
-cd api && uv sync && uv run uvicorn src.main:app --reload
+# API (Lambda)
+cd api && uv sync && uv run uvicorn src.main:app --reload --port 8000
 
-# Workers (local simulation)
+# Workers (Lambda - local simulation)
 cd workers && uv sync && uv run python -m src.main
+
+# Microservices (Fargate - via Docker)
+cd services && docker-compose up
+
+# Or run individual service
+cd services/placement-service && uv sync && uv run uvicorn src.main:app --reload --port 8001
+```
+
+## Docker Compose (Local Services)
+
+```bash
+# Start all services with dependencies
+docker-compose -f services/docker-compose.yml up
+
+# Rebuild after changes
+docker-compose -f services/docker-compose.yml up --build
 ```
 
 ## Clean Architecture
@@ -85,4 +115,9 @@ Each component follows clean architecture:
 - **Domain**: Business entities (Placement, Video, Campaign)
 - **Application**: Use cases and orchestration
 - **Infrastructure**: Aurora, S3, EventBridge, SQS
-- **Interface**: API routes, Lambda handlers
+- **Interface**: API routes, Lambda handlers, gRPC (services)
+
+## Related Documentation
+
+- [ADR-007: Fargate Microservices](../docs/adr/007-fargate-microservices.md) – Lambda vs Fargate decisions
+- [Services README](services/README.md) – Microservices documentation

@@ -1,0 +1,134 @@
+# =============================================================================
+# Nedlia Microservices - Local Development
+# =============================================================================
+# Run: docker-compose up
+# Rebuild: docker-compose up --build
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # Domain Microservices
+  # ---------------------------------------------------------------------------
+  placement-service:
+    build:
+      context: ./placement-service
+      dockerfile: Dockerfile
+    ports:
+      - '8001:8000'
+    environment:
+      - DATABASE_URL=postgresql://nedlia:nedlia@postgres:5432/nedlia
+      - REDIS_URL=redis://redis:6379
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+      - S3_BUCKET=nedlia-placements
+      - EVENTBRIDGE_BUS=nedlia-events
+      - LOG_LEVEL=debug
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health/live']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  validation-service:
+    build:
+      context: ./validation-service
+      dockerfile: Dockerfile
+    ports:
+      - '8002:8000'
+    environment:
+      - DATABASE_URL=postgresql://nedlia:nedlia@postgres:5432/nedlia
+      - REDIS_URL=redis://redis:6379
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - LOG_LEVEL=debug
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - full # Only start with: docker-compose --profile full up
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - '8003:8000'
+    environment:
+      - DATABASE_URL=postgresql://nedlia:nedlia@postgres:5432/nedlia
+      - REDIS_URL=redis://redis:6379
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - LOG_LEVEL=debug
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - full
+
+  # ---------------------------------------------------------------------------
+  # Infrastructure Services
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: nedlia
+      POSTGRES_PASSWORD: nedlia
+      POSTGRES_DB: nedlia
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U nedlia']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - '4566:4566'
+    environment:
+      - SERVICES=s3,sqs,events
+      - DEBUG=1
+      - PERSISTENCE=1
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - ./localstack-init.sh:/etc/localstack/init/ready.d/init.sh:ro
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:4566/_localstack/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+  localstack_data:
+
+networks:
+  default:
+    name: nedlia-network

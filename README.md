@@ -107,8 +107,12 @@ See [Getting Started](docs/getting-started.md) for detailed setup instructions.
 
 ```text
 nedlia-back-end/
-  api/                FastAPI REST API
-  workers/            Background job processors
+  api/                FastAPI REST API (Lambda)
+  workers/            Event-driven workers (Lambda)
+  services/           Domain microservices (Fargate)
+    placement-service/
+    validation-service/
+    notification-service/
   shared/             Shared domain models
 
 nedlia-front-end/

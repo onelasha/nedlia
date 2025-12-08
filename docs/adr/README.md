@@ -40,6 +40,7 @@ What becomes easier or more difficult to do because of this change?
 | [004](004-terraform-terragrunt.md)    | Terraform + Terragrunt for IaC          | Accepted | 2024-12 |
 | [005](005-trunk-based-development.md) | Trunk-Based Development + Feature Flags | Accepted | 2024-12 |
 | [006](006-cap-theorem-tradeoffs.md)   | CAP Theorem Trade-offs                  | Accepted | 2024-12 |
+| [007](007-fargate-microservices.md)   | Fargate for Domain Microservices        | Accepted | 2024-12 |
 
 ## Creating a New ADR
 
