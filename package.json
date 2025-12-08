@@ -1,0 +1,20 @@
+{
+  "name": "nedlia-monorepo",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "nedlia-back-end/nestjs",
+    "nedlia-front-end/web",
+    "nedlia-sdk/js"
+  ],
+  "scripts": {
+    "lint": "nx lint",
+    "test": "nx test",
+    "build": "nx build",
+    "format": "nx format",
+    "affected": "nx affected"
+  },
+  "devDependencies": {
+    "nx": "^20.0.0"
+  }
+}
