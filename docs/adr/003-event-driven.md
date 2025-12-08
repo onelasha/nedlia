@@ -6,10 +6,12 @@ Accepted
 
 ## Context
 
-Nedlia's code review platform needs to:
+Nedlia's product placement platform needs to:
 
-- Process PRs asynchronously (analysis takes time)
-- Notify multiple systems when events occur
+- Generate placement files asynchronously (after placements are created)
+- Validate placements without blocking the API response
+- Notify advertisers when campaigns or placements change
+- Sync data between plugins and server
 - Scale different components independently
 - Handle failures gracefully
 
@@ -23,11 +25,11 @@ We adopt an **event-driven architecture** with **eventual consistency**.
 Command → Handler → Persist → Publish Event → Subscribers
 ```
 
-1. API receives command (e.g., "create review")
+1. API receives command (e.g., "create placement")
 2. Lambda handler validates and persists to Aurora
-3. Handler publishes event to EventBridge (e.g., `review.created`)
+3. Handler publishes event to EventBridge (e.g., `placement.created`)
 4. SQS queues receive event and trigger downstream Lambdas
-5. Consumers process event (send notifications, update read models, etc.)
+5. Consumers process event (generate files, send notifications, etc.)
 
 ### Key Patterns
 
@@ -43,23 +45,36 @@ We use [CloudEvents](https://cloudevents.io/) specification:
 ```json
 {
   "specversion": "1.0",
-  "type": "com.nedlia.review.created",
-  "source": "/reviews",
+  "type": "com.nedlia.placement.created",
+  "source": "/placements",
   "id": "uuid",
   "time": "2024-01-01T00:00:00Z",
   "data": {
-    "reviewId": "123",
-    "prUrl": "https://..."
+    "placementId": "123",
+    "videoId": "456",
+    "productId": "789"
   }
 }
 ```
+
+### Key Events
+
+| Event                        | Publisher        | Consumers                |
+| ---------------------------- | ---------------- | ------------------------ |
+| `placement.created`          | API              | File Generator, Notifier |
+| `placement.updated`          | API              | File Generator, Notifier |
+| `placement.deleted`          | API              | File Generator, Notifier |
+| `video.validation_requested` | API              | Validator                |
+| `video.validation_completed` | Validator        | Notifier, API (cache)    |
+| `campaign.created`           | API              | Notifier                 |
+| `plugin.sync_requested`      | Plugin (via API) | Sync Worker              |
 
 ## Consequences
 
 ### Positive
 
 - Services are decoupled; can evolve independently
-- Natural fit for async processing (code analysis)
+- Natural fit for async processing (file generation, validation)
 - Easy to add new consumers without changing producers
 - Built-in retry and failure handling via SQS
 

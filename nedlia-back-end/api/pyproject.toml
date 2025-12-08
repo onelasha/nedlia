@@ -1,0 +1,25 @@
+[project]
+name = "nedlia-api"
+version = "0.1.0"
+description = "Nedlia REST API"
+requires-python = ">=3.11"
+dependencies = [
+    # Web framework
+    # "fastapi>=0.109.0",
+    # "uvicorn[standard]>=0.27.0",
+    # Database
+    # "sqlalchemy>=2.0.0",
+    # "asyncpg>=0.29.0",
+    # AWS
+    # "boto3>=1.34.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # "pytest>=8.0.0",
+    # "pytest-asyncio>=0.23.0",
+    # "httpx>=0.26.0",
+]
+
+[tool.uv]
+dev-dependencies = []

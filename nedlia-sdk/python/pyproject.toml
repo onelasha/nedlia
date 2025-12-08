@@ -1,6 +1,18 @@
 [project]
-name = "nedlia-sdk-py"
+name = "nedlia"
 version = "0.1.0"
-requires-python = ">=3.11"
+description = "Nedlia Python SDK"
+requires-python = ">=3.9"
+dependencies = [
+    # "httpx>=0.26.0",
+    # "pydantic>=2.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # "pytest>=8.0.0",
+    # "pytest-asyncio>=0.23.0",
+]
 
 [tool.uv]
+dev-dependencies = []

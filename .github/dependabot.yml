@@ -13,9 +13,22 @@ updates:
       - 'dependencies'
       - 'javascript'
 
-  # Python dependencies - backend
+  # Python dependencies - API
   - package-ecosystem: 'pip'
-    directory: '/nedlia-back-end/python'
+    directory: '/nedlia-back-end/api'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'chore(deps)'
+    labels:
+      - 'dependencies'
+      - 'python'
+
+  # Python dependencies - Workers
+  - package-ecosystem: 'pip'
+    directory: '/nedlia-back-end/workers'
     schedule:
       interval: 'weekly'
       day: 'monday'

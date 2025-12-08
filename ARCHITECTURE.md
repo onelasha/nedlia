@@ -38,38 +38,65 @@ This document describes the clean architecture principles and layer structure us
 
 ## Per-Stack Structure
 
-### Python Backend (`nedlia-back-end/python`)
+### API Service (`nedlia-back-end/api`)
+
+FastAPI REST API - handles synchronous requests from plugins, SDKs, and portal.
 
 ```text
-src/nedlia_backend_py/
-  domain/           # Entities, value objects, domain services
+src/
+  domain/           # Placement, Video, Campaign entities
   application/      # Use cases, ports (interfaces), DTOs
-  infrastructure/   # Repositories, external clients, ORM models
-  interface/        # FastAPI/Flask routes, CLI commands
+  infrastructure/   # Repositories, S3 client, EventBridge publisher
+  interface/        # FastAPI routes, middleware
 ```
 
-### NestJS Backend (`nedlia-back-end/nestjs`)
+### Workers (`nedlia-back-end/workers`)
+
+Event-driven workers - consume messages from SQS queues.
 
 ```text
 src/
-  core/
-    domain/         # Entities, value objects
-    application/    # Use cases, ports (TS interfaces)
-  infrastructure/   # TypeORM/Prisma repos, external clients
-  interface/        # Nest controllers, resolvers, guards
+  handlers/         # SQS message handlers (Lambda entry points)
+  tasks/            # Business logic for async processing
 ```
 
-### React Frontend (`nedlia-front-end/web`)
+**Worker Types**:
+| Worker | Trigger | Purpose |
+|--------|---------|--------|
+| `file_generator` | `placement.created` | Generate placement data files |
+| `validator` | `video.validation_requested` | Async placement validation |
+| `notifier` | `placement.*`, `campaign.*` | Send notifications |
+| `sync` | `plugin.sync_requested` | Sync plugin data to server |
+
+### Shared Domain (`nedlia-back-end/shared`)
+
+Shared domain models used by both API and Workers.
 
 ```text
 src/
-  domain/           # Domain models, validation, pure logic
-  application/      # Use cases, state orchestration, facades
-  infrastructure/   # API clients, storage adapters
-  ui/               # React components, hooks, pages
+  domain/           # Placement, Video, Campaign, Product entities
+  utils/            # Common utilities
 ```
 
-### SDKs (`nedlia-sdk/python`, `nedlia-sdk/js`)
+### Portal (`nedlia-front-end/portal`)
+
+React web application for advertisers and agencies.
+
+```text
+src/
+  domain/           # Domain models, validation
+  application/      # Use cases, state management
+  infrastructure/   # API clients, storage
+  ui/               # React components, pages
+```
+
+### SDKs (`nedlia-sdk/`)
+
+| SDK           | Purpose                            |
+| ------------- | ---------------------------------- |
+| `javascript/` | Video player integration (web)     |
+| `python/`     | Server-side API integration        |
+| `swift/`      | iOS/macOS video player integration |
 
 ```text
 src/
@@ -78,14 +105,22 @@ src/
   infrastructure/   # HTTP transport, auth, retries
 ```
 
-### SwiftUI Plugin (`nedlia-plugin/ios`)
+### Plugins (`nedlia-plugin/`)
+
+Video editor plugins for adding product placements.
+
+| Plugin        | Platform         |
+| ------------- | ---------------- |
+| `finalcut/`   | Final Cut Pro    |
+| `davinci/`    | DaVinci Resolve  |
+| `lumafusion/` | LumaFusion (iOS) |
 
 ```text
 Sources/
-  Domain/           # Models, business rules
+  Domain/           # Placement models, validation
   Application/      # Use cases, view models
-  Infrastructure/   # Networking, persistence
-  UI/               # SwiftUI views
+  Infrastructure/   # API client, local storage
+  UI/               # SwiftUI/AppKit views
 ```
 
 ## AWS Serverless Architecture
@@ -135,13 +170,24 @@ Nedlia uses an **event-driven, serverless architecture** on AWS with **eventual 
 - **Dead Letter Queues**: Failed events go to DLQ for retry/inspection
 - **Event Schemas**: Use CloudEvents format for interoperability
 
-### Event Flow Example
+### Event Flow Example: Create Placement
 
-1. **Command**: `POST /reviews` → API Gateway → Lambda
-2. **Persist**: Lambda writes to Aurora
-3. **Publish**: Lambda emits `review.created` to EventBridge
-4. **Subscribe**: SQS queues receive event, trigger downstream Lambdas
-5. **Process**: Consumers update read models, send notifications, etc.
+1. **Command**: Plugin calls `POST /placements` → API Gateway → Lambda
+2. **Persist**: API Lambda writes placement to Aurora
+3. **Publish**: API Lambda emits `placement.created` to EventBridge
+4. **Subscribe**: SQS queues receive event:
+   - `file-generation-queue` → File Generator Worker
+   - `notification-queue` → Notifier Worker
+5. **Process**: Workers generate files, send notifications
+
+### Event Flow Example: Validate Video
+
+1. **Command**: SDK calls `POST /videos/{id}/validate` → API Gateway → Lambda
+2. **Publish**: API Lambda emits `video.validation_requested` to EventBridge
+3. **Response**: API returns `202 Accepted` with validation ID (async)
+4. **Process**: Validator Worker processes placements, checks timing
+5. **Complete**: Worker emits `video.validation_completed`
+6. **Query**: SDK polls `GET /validations/{id}` for result (eventual consistency)
 
 ---
 

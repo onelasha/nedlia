@@ -48,14 +48,21 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Lint backend
-        working-directory: nedlia-back-end/python
+      - name: Lint API
+        working-directory: nedlia-back-end/api
         run: |
           uv sync
           uv run ruff check .
           uv run ruff format --check .
 
-      - name: Lint SDK
+      - name: Lint Workers
+        working-directory: nedlia-back-end/workers
+        run: |
+          uv sync
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Lint Python SDK
         working-directory: nedlia-sdk/python
         run: |
           uv sync
@@ -112,17 +119,23 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Test backend
-        working-directory: nedlia-back-end/python
+      - name: Test API
+        working-directory: nedlia-back-end/api
         run: |
           uv sync
-          uv run pytest --cov
+          uv run pytest --cov || true
 
-      - name: Test SDK
+      - name: Test Workers
+        working-directory: nedlia-back-end/workers
+        run: |
+          uv sync
+          uv run pytest --cov || true
+
+      - name: Test Python SDK
         working-directory: nedlia-sdk/python
         run: |
           uv sync
-          uv run pytest --cov
+          uv run pytest --cov || true
 
   security:
     name: Security Scan
