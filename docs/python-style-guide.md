@@ -414,7 +414,208 @@ class TimingMiddleware(BaseHTTPMiddleware):
         return response
 ```
 
-### App Entry Point with Middleware
+### Lifespan: Resource Allocation & Deallocation
+
+The **lifespan** context manager handles resource initialization (startup) and cleanup (shutdown). This is the recommended pattern for:
+
+| Resource             | Startup                  | Shutdown                |
+| -------------------- | ------------------------ | ----------------------- |
+| **Database pool**    | Create connection pool   | Close all connections   |
+| **Redis/Cache**      | Connect to Redis         | Close connection        |
+| **HTTP clients**     | Create httpx.AsyncClient | Close client            |
+| **AWS clients**      | Initialize boto3 session | (stateless, no cleanup) |
+| **Background tasks** | Start scheduler          | Cancel pending tasks    |
+| **ML models**        | Load into memory         | Free memory             |
+
+```python
+# src/core/lifespan.py
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
+
+import httpx
+from fastapi import FastAPI
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from redis.asyncio import Redis
+
+from src.core.config import settings
+
+
+# Global resources (initialized in lifespan, accessed via app.state)
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    """
+    Manage application lifecycle resources.
+
+    Resources are stored in app.state for access in dependencies.
+    """
+    # =========================================================================
+    # STARTUP: Initialize resources
+    # =========================================================================
+
+    # Database connection pool
+    app.state.db_engine: AsyncEngine = create_async_engine(
+        settings.database_url,
+        pool_size=10,
+        max_overflow=20,
+        pool_pre_ping=True,  # Verify connections before use
+        pool_recycle=3600,   # Recycle connections after 1 hour
+    )
+
+    # Redis connection
+    app.state.redis: Redis = Redis.from_url(
+        settings.redis_url,
+        encoding="utf-8",
+        decode_responses=True,
+    )
+
+    # HTTP client for external API calls
+    app.state.http_client: httpx.AsyncClient = httpx.AsyncClient(
+        timeout=httpx.Timeout(30.0),
+        limits=httpx.Limits(max_connections=100),
+    )
+
+    print("✅ Application startup complete")
+
+    # =========================================================================
+    # YIELD: Application runs here
+    # =========================================================================
+    yield
+
+    # =========================================================================
+    # SHUTDOWN: Cleanup resources (reverse order of initialization)
+    # =========================================================================
+
+    # Close HTTP client
+    await app.state.http_client.aclose()
+
+    # Close Redis connection
+    await app.state.redis.close()
+
+    # Dispose database engine (closes all pooled connections)
+    await app.state.db_engine.dispose()
+
+    print("✅ Application shutdown complete")
+```
+
+### Accessing Lifespan Resources in Dependencies
+
+```python
+# src/core/dependencies.py
+from typing import Annotated, AsyncGenerator
+
+from fastapi import Depends, Request
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import sessionmaker
+from redis.asyncio import Redis
+import httpx
+
+
+async def get_db_session(request: Request) -> AsyncGenerator[AsyncSession, None]:
+    """Get database session from the connection pool."""
+    engine = request.app.state.db_engine
+    async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+    async with async_session() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
+
+
+async def get_redis(request: Request) -> Redis:
+    """Get Redis client from app state."""
+    return request.app.state.redis
+
+
+async def get_http_client(request: Request) -> httpx.AsyncClient:
+    """Get HTTP client from app state."""
+    return request.app.state.http_client
+
+
+# Type aliases for cleaner route signatures
+DBSession = Annotated[AsyncSession, Depends(get_db_session)]
+RedisClient = Annotated[Redis, Depends(get_redis)]
+HTTPClient = Annotated[httpx.AsyncClient, Depends(get_http_client)]
+```
+
+### Using Resources in Routes
+
+```python
+# src/placements/router.py
+from src.core.dependencies import DBSession, RedisClient
+
+@router.get("/{placement_id}")
+async def get_placement(
+    placement_id: UUID,
+    db: DBSession,
+    redis: RedisClient,
+) -> PlacementResponse:
+    # Check cache first
+    cached = await redis.get(f"placement:{placement_id}")
+    if cached:
+        return PlacementResponse.model_validate_json(cached)
+
+    # Query database
+    result = await db.execute(
+        select(Placement).where(Placement.id == placement_id)
+    )
+    placement = result.scalar_one_or_none()
+
+    if placement:
+        # Cache for 5 minutes
+        await redis.setex(
+            f"placement:{placement_id}",
+            300,
+            PlacementResponse.from_orm(placement).model_dump_json(),
+        )
+
+    return placement
+```
+
+### Best Practices for Resource Management
+
+1. **Initialize once, reuse everywhere** - Create pools/clients in lifespan, not per-request
+2. **Use connection pools** - Never create new DB connections per request
+3. **Set timeouts** - Always configure timeouts for external resources
+4. **Graceful shutdown** - Close resources in reverse order of initialization
+5. **Health checks** - Verify resource health before marking app as ready
+
+```python
+# src/health/router.py
+@router.get("/health/ready")
+async def readiness_check(
+    request: Request,
+    db: DBSession,
+    redis: RedisClient,
+) -> dict:
+    """Check if all resources are healthy."""
+    checks = {}
+
+    # Database check
+    try:
+        await db.execute(text("SELECT 1"))
+        checks["database"] = "healthy"
+    except Exception as e:
+        checks["database"] = f"unhealthy: {e}"
+
+    # Redis check
+    try:
+        await redis.ping()
+        checks["redis"] = "healthy"
+    except Exception as e:
+        checks["redis"] = f"unhealthy: {e}"
+
+    all_healthy = all(v == "healthy" for v in checks.values())
+
+    if not all_healthy:
+        raise HTTPException(status_code=503, detail=checks)
+
+    return {"status": "ready", "checks": checks}
+```
+
+### App Entry Point with Lifespan
 
 ```python
 # src/main.py
@@ -423,18 +624,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.core.lifespan import lifespan
 from src.middleware.correlation_id import CorrelationIdMiddleware
 from src.middleware.timing import TimingMiddleware
 from src.placements.router import router as placements_router
 from src.videos.router import router as videos_router
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Startup and shutdown events."""
-    # Startup: initialize DB pool, cache, etc.
-    yield
-    # Shutdown: close connections
 
 
 app = FastAPI(
