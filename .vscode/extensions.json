@@ -3,6 +3,7 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "charliermarsh.ruff",
+    "SonarSource.sonarlint-vscode",
     "ms-python.python",
     "ms-python.vscode-pylance",
     "hashicorp.terraform",
@@ -12,8 +13,8 @@
     "streetsidesoftware.code-spell-checker",
     "usernamehw.errorlens",
     "gruntfuggly.todo-tree",
+    "mikestead.dotenv",
     "bradlc.vscode-tailwindcss",
-    "prisma.prisma",
-    "mikestead.dotenv"
+    "prisma.prisma"
   ]
 }

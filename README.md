@@ -4,8 +4,10 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![GitHub](https://img.shields.io/github/stars/onelasha/Nedlia?style=social)](https://github.com/onelasha/Nedlia)
 
-<!-- Uncomment when CI is set up:
+<!-- Uncomment when CI/SonarCloud is set up:
 [![Build](https://github.com/onelasha/Nedlia/actions/workflows/ci.yml/badge.svg)](https://github.com/onelasha/Nedlia/actions)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=onelasha_Nedlia&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=onelasha_Nedlia)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=onelasha_Nedlia&metric=coverage)](https://sonarcloud.io/summary/new_code?id=onelasha_Nedlia)
 -->
 
 **AI-powered code review platform** that helps teams ship better code faster through automated PR analysis, intelligent suggestions, and seamless integrations.
@@ -55,6 +57,7 @@ See [Getting Started](docs/getting-started.md) for detailed setup instructions.
 - [Getting Started](docs/getting-started.md) – Prerequisites, installation, environment setup
 - [Local Development](docs/local-development.md) – Running services locally
 - [Branching Strategy](docs/branching-strategy.md) – Trunk-based development, feature flags (LaunchDarkly)
+- [Code Quality](docs/code-quality.md) – SonarCloud, linting, formatting standards
 - [Testing](docs/testing.md) – Test strategy, running tests, coverage
 - [Deployment](docs/deployment.md) – CI/CD, environments, release process
 

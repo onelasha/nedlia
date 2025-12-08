@@ -1,0 +1,77 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for accurate blame information
+
+      # ------------------------------------------------------------------------
+      # Setup Node.js for JS/TS projects
+      # ------------------------------------------------------------------------
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ------------------------------------------------------------------------
+      # Setup Python for Python projects
+      # ------------------------------------------------------------------------
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: '.python-version'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Install Python dependencies
+        run: |
+          cd nedlia-back-end/python && uv sync
+          cd ../..
+          cd nedlia-sdk/python && uv sync
+
+      # ------------------------------------------------------------------------
+      # Run Tests with Coverage
+      # ------------------------------------------------------------------------
+      - name: Run JS/TS tests with coverage
+        run: pnpm test --coverage --coverageReporters=lcov
+        continue-on-error: true
+
+      - name: Run Python tests with coverage
+        run: |
+          cd nedlia-back-end/python
+          uv run pytest --cov --cov-report=xml:coverage.xml || true
+          cd ../..
+          cd nedlia-sdk/python
+          uv run pytest --cov --cov-report=xml:coverage.xml || true
+        continue-on-error: true
+
+      # ------------------------------------------------------------------------
+      # SonarCloud Scan
+      # ------------------------------------------------------------------------
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
