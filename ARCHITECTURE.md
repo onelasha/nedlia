@@ -88,6 +88,117 @@ Sources/
   UI/               # SwiftUI views
 ```
 
+## AWS Serverless Architecture
+
+Nedlia uses an **event-driven, serverless architecture** on AWS with **eventual consistency**.
+
+### Infrastructure Stack
+
+| Component     | AWS Service                          |
+| ------------- | ------------------------------------ |
+| Compute       | Lambda (Python, Node.js)             |
+| API           | API Gateway (REST)                   |
+| Database      | Aurora Serverless v2 (PostgreSQL)    |
+| Messaging     | EventBridge + SQS                    |
+| Cache         | ElastiCache (Redis)                  |
+| Auth          | Cognito                              |
+| Storage       | S3                                   |
+| Secrets       | Secrets Manager, SSM Parameter Store |
+| Observability | CloudWatch Logs, X-Ray               |
+
+### Event-Driven Design
+
+```text
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│   API GW     │────▶│   Lambda     │────▶│ EventBridge  │
+│  (Commands)  │     │  (Handler)   │     │   (Events)   │
+└──────────────┘     └──────────────┘     └──────┬───────┘
+                                                 │
+                     ┌───────────────────────────┼───────────────────────────┐
+                     ▼                           ▼                           ▼
+              ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
+              │     SQS      │           │     SQS      │           │     SQS      │
+              │  (Queue A)   │           │  (Queue B)   │           │  (Queue C)   │
+              └──────┬───────┘           └──────┬───────┘           └──────┬───────┘
+                     ▼                           ▼                           ▼
+              ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
+              │   Lambda     │           │   Lambda     │           │   Lambda     │
+              │ (Consumer A) │           │ (Consumer B) │           │ (Consumer C) │
+              └──────────────┘           └──────────────┘           └──────────────┘
+```
+
+### Key Patterns
+
+- **CQRS**: Separate command (write) and query (read) paths
+- **Eventual Consistency**: Events propagate asynchronously; reads may lag writes
+- **Idempotency**: All handlers must be idempotent (use idempotency keys)
+- **Dead Letter Queues**: Failed events go to DLQ for retry/inspection
+- **Event Schemas**: Use CloudEvents format for interoperability
+
+### Event Flow Example
+
+1. **Command**: `POST /reviews` → API Gateway → Lambda
+2. **Persist**: Lambda writes to Aurora
+3. **Publish**: Lambda emits `review.created` to EventBridge
+4. **Subscribe**: SQS queues receive event, trigger downstream Lambdas
+5. **Process**: Consumers update read models, send notifications, etc.
+
+---
+
+## Infrastructure as Code
+
+### Tooling
+
+- **Terraform**: Infrastructure definitions
+- **Terragrunt**: DRY configuration, environment management
+
+### Environments
+
+| Environment  | Purpose                      |
+| ------------ | ---------------------------- |
+| `dev`        | Local/individual development |
+| `testing`    | Automated test runs, CI      |
+| `staging`    | Pre-production validation    |
+| `production` | Live system                  |
+
+### IaC Structure (`nedlia-IaC/`)
+
+```text
+nedlia-IaC/
+  terragrunt.hcl              # Root Terragrunt config
+  environments/
+    dev/
+      terragrunt.hcl
+      env.hcl
+    testing/
+      terragrunt.hcl
+      env.hcl
+    staging/
+      terragrunt.hcl
+      env.hcl
+    production/
+      terragrunt.hcl
+      env.hcl
+  modules/
+    vpc/
+    aurora/
+    lambda/
+    api-gateway/
+    eventbridge/
+    sqs/
+    cognito/
+    s3/
+```
+
+### Deployment Flow
+
+```text
+terragrunt run-all plan   # Preview changes across all modules
+terragrunt run-all apply  # Apply changes
+```
+
+---
+
 ## Testing Strategy
 
 - **Domain**: Unit tests, no mocks needed.
