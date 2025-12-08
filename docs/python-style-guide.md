@@ -317,10 +317,155 @@ class PlacementService:
 
 ## FastAPI Patterns
 
+### Project Structure
+
+Organize FastAPI applications by **feature/domain**, not by technical layer:
+
+```
+src/
+├── main.py                      # App entry point, middleware registration
+├── config.py                    # Settings and configuration
+├── dependencies.py              # Shared dependencies (DB, auth, etc.)
+│
+├── placements/                  # Feature module
+│   ├── __init__.py
+│   ├── router.py                # Route definitions
+│   ├── schemas.py               # Pydantic request/response models
+│   ├── service.py               # Business logic
+│   ├── repository.py            # Data access
+│   └── dependencies.py          # Feature-specific dependencies
+│
+├── videos/                      # Another feature module
+│   ├── router.py
+│   ├── schemas.py
+│   └── ...
+│
+├── middleware/                  # Custom middleware
+│   ├── __init__.py
+│   ├── logging.py
+│   ├── timing.py
+│   └── correlation_id.py
+│
+└── core/                        # Shared utilities
+    ├── exceptions.py
+    ├── security.py
+    └── database.py
+```
+
+### Middleware vs Dependencies
+
+| Concern                      | Use Middleware | Use Dependencies         |
+| ---------------------------- | -------------- | ------------------------ |
+| **Request logging**          | ✅             |                          |
+| **Correlation ID injection** | ✅             |                          |
+| **Response timing**          | ✅             |                          |
+| **CORS**                     | ✅             |                          |
+| **Authentication**           |                | ✅ (per-route control)   |
+| **Authorization**            |                | ✅ (role-based)          |
+| **Database sessions**        |                | ✅ (request-scoped)      |
+| **Service injection**        |                | ✅                       |
+| **Rate limiting**            | ✅ or ✅       | (depends on granularity) |
+
+**Rule of thumb:**
+
+- **Middleware**: Runs on ALL requests, no access to route-specific info
+- **Dependencies**: Runs per-route, can be selective, supports DI
+
+### Middleware Examples
+
+```python
+# src/middleware/correlation_id.py
+import uuid
+from contextvars import ContextVar
+
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+
+correlation_id_var: ContextVar[str] = ContextVar("correlation_id", default="")
+
+
+class CorrelationIdMiddleware(BaseHTTPMiddleware):
+    """Add correlation ID to all requests for distributed tracing."""
+
+    async def dispatch(self, request: Request, call_next):
+        correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
+        correlation_id_var.set(correlation_id)
+
+        response = await call_next(request)
+        response.headers["X-Correlation-ID"] = correlation_id
+        return response
+
+
+# src/middleware/timing.py
+import time
+
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+
+
+class TimingMiddleware(BaseHTTPMiddleware):
+    """Add request timing headers."""
+
+    async def dispatch(self, request: Request, call_next):
+        start = time.perf_counter()
+        response = await call_next(request)
+        duration_ms = (time.perf_counter() - start) * 1000
+        response.headers["X-Response-Time"] = f"{duration_ms:.2f}ms"
+        return response
+```
+
+### App Entry Point with Middleware
+
+```python
+# src/main.py
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from src.middleware.correlation_id import CorrelationIdMiddleware
+from src.middleware.timing import TimingMiddleware
+from src.placements.router import router as placements_router
+from src.videos.router import router as videos_router
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup and shutdown events."""
+    # Startup: initialize DB pool, cache, etc.
+    yield
+    # Shutdown: close connections
+
+
+app = FastAPI(
+    title="Nedlia API",
+    version="1.0.0",
+    lifespan=lifespan,
+)
+
+# =============================================================================
+# Middleware (order matters - first added = outermost)
+# =============================================================================
+app.add_middleware(TimingMiddleware)           # Outermost - times entire request
+app.add_middleware(CorrelationIdMiddleware)    # Add correlation ID early
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://app.nedlia.com"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# =============================================================================
+# Routers
+# =============================================================================
+app.include_router(placements_router, prefix="/api/v1")
+app.include_router(videos_router, prefix="/api/v1")
+```
+
 ### Router Structure
 
 ```python
-# src/interface/routes/placements.py
+# src/placements/router.py
 from typing import Annotated
 from uuid import UUID
 
