@@ -77,6 +77,7 @@ See [Getting Started](docs/getting-started.md) for detailed setup instructions.
 - [Branching Strategy](docs/branching-strategy.md) – Trunk-based development, feature flags
 - [Code Quality](docs/code-quality.md) – SonarCloud, linting, formatting
 - [Python Style Guide](docs/python-style-guide.md) – PEP 8, FastAPI patterns, type hints
+- [TypeScript Style Guide](docs/typescript-style-guide.md) – React, ESLint, Prettier, strict mode
 - [Testing Strategy](docs/testing-strategy.md) – Testing pyramid, contract tests, coverage
 - [Deployment](docs/deployment.md) – CI/CD, environments, release process
 - [Deployment Orchestration](docs/deployment-orchestration.md) – Multi-team deployment, change detection
