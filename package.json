@@ -15,6 +15,6 @@
     "affected": "nx affected"
   },
   "devDependencies": {
-    "nx": "^20.0.0"
+    "nx": "^22.1.3"
   }
 }
