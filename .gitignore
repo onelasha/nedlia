@@ -18,6 +18,12 @@ __pycache__/
 .DS_Store
 
 # IDE
-.vscode/
 .idea/
 *.swp
+
+# Keep .vscode/ tracked for shared settings
+# but ignore personal settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json

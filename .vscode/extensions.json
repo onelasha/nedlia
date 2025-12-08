@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "charliermarsh.ruff",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "hashicorp.terraform",
+    "amazonwebservices.aws-toolkit-vscode",
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "gruntfuggly.todo-tree",
+    "bradlc.vscode-tailwindcss",
+    "prisma.prisma",
+    "mikestead.dotenv"
+  ]
+}

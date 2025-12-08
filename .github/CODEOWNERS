@@ -1,0 +1,21 @@
+# Default owners for everything
+* @onelasha
+
+# Backend
+/nedlia-back-end/ @onelasha
+
+# Frontend
+/nedlia-front-end/ @onelasha
+
+# Infrastructure
+/nedlia-IaC/ @onelasha
+
+# SDKs
+/nedlia-sdk/ @onelasha
+
+# Plugins
+/nedlia-plugin/ @onelasha
+
+# Documentation
+*.md @onelasha
+/docs/ @onelasha

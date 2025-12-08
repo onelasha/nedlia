@@ -1,0 +1,21 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlist for Nedlia"
+paths = [
+  '''\.env\.example$''',
+  '''\.github/''',
+]
+
+[[rules]]
+id = "nedlia-api-key"
+description = "Nedlia API Key"
+regex = '''nedlia[_-]?api[_-]?key['\"]?\s*[:=]\s*['\"]?([a-zA-Z0-9_-]{32,})'''
+secretGroup = 1
+
+[[rules]]
+id = "generic-secret"
+description = "Generic Secret"
+regex = '''(?i)(secret|password|token|key|credential)['\"]?\s*[:=]\s*['\"]?([a-zA-Z0-9_/+=]{16,})'''
+secretGroup = 2
