@@ -1,0 +1,447 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      services:
+        description: 'Services to deploy (comma-separated, or "all")'
+        required: false
+        default: 'all'
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ===========================================================================
+  # Detect Changes
+  # ===========================================================================
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.changes.outputs.api }}
+      workers: ${{ steps.changes.outputs.workers }}
+      placement-service: ${{ steps.changes.outputs.placement-service }}
+      validation-service: ${{ steps.changes.outputs.validation-service }}
+      notification-service: ${{ steps.changes.outputs.notification-service }}
+      portal: ${{ steps.changes.outputs.portal }}
+      infrastructure: ${{ steps.changes.outputs.infrastructure }}
+      has-changes: ${{ steps.check.outputs.has-changes }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            api:
+              - 'nedlia-back-end/api/**'
+              - 'nedlia-back-end/shared/**'
+            workers:
+              - 'nedlia-back-end/workers/**'
+              - 'nedlia-back-end/shared/**'
+            placement-service:
+              - 'nedlia-back-end/services/placement-service/**'
+              - 'nedlia-back-end/shared/**'
+            validation-service:
+              - 'nedlia-back-end/services/validation-service/**'
+              - 'nedlia-back-end/shared/**'
+            notification-service:
+              - 'nedlia-back-end/services/notification-service/**'
+              - 'nedlia-back-end/shared/**'
+            portal:
+              - 'nedlia-front-end/portal/**'
+            infrastructure:
+              - 'nedlia-IaC/**'
+
+      - name: Check if any changes
+        id: check
+        run: |
+          if [[ "${{ steps.changes.outputs.api }}" == "true" ]] || \
+             [[ "${{ steps.changes.outputs.workers }}" == "true" ]] || \
+             [[ "${{ steps.changes.outputs.placement-service }}" == "true" ]] || \
+             [[ "${{ steps.changes.outputs.validation-service }}" == "true" ]] || \
+             [[ "${{ steps.changes.outputs.notification-service }}" == "true" ]] || \
+             [[ "${{ steps.changes.outputs.portal }}" == "true" ]]; then
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ===========================================================================
+  # Build API (Lambda)
+  # ===========================================================================
+  build-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.api == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: '.python-version'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Build API package
+        working-directory: nedlia-back-end/api
+        run: |
+          uv sync --no-dev
+          mkdir -p package
+          cp -r .venv/lib/python*/site-packages/* package/
+          cp -r src/* package/
+          cd package && zip -r ../api-deployment.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-build
+          path: nedlia-back-end/api/api-deployment.zip
+          retention-days: 1
+
+  # ===========================================================================
+  # Build Workers (Lambda)
+  # ===========================================================================
+  build-workers:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.workers == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: '.python-version'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      - name: Build Workers package
+        working-directory: nedlia-back-end/workers
+        run: |
+          uv sync --no-dev
+          mkdir -p package
+          cp -r .venv/lib/python*/site-packages/* package/
+          cp -r src/* package/
+          cd package && zip -r ../workers-deployment.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: workers-build
+          path: nedlia-back-end/workers/workers-deployment.zip
+          retention-days: 1
+
+  # ===========================================================================
+  # Build Fargate Services
+  # ===========================================================================
+  build-placement-service:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.placement-service == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: nedlia-back-end/services/placement-service
+          push: false
+          tags: placement-service:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/placement-service.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: placement-service-build
+          path: /tmp/placement-service.tar
+          retention-days: 1
+
+  build-validation-service:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.validation-service == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: nedlia-back-end/services/validation-service
+          push: false
+          tags: validation-service:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/validation-service.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-service-build
+          path: /tmp/validation-service.tar
+          retention-days: 1
+
+  build-notification-service:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.notification-service == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: nedlia-back-end/services/notification-service
+          push: false
+          tags: notification-service:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/notification-service.tar
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: notification-service-build
+          path: /tmp/notification-service.tar
+          retention-days: 1
+
+  # ===========================================================================
+  # Build Portal (CloudFront)
+  # ===========================================================================
+  build-portal:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.portal == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        working-directory: nedlia-front-end/portal
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        working-directory: nedlia-front-end/portal
+        run: pnpm build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portal-build
+          path: nedlia-front-end/portal/dist
+          retention-days: 1
+
+  # ===========================================================================
+  # Deploy to Staging
+  # ===========================================================================
+  deploy-staging:
+    needs:
+      - detect-changes
+      - build-api
+      - build-workers
+      - build-placement-service
+      - build-validation-service
+      - build-notification-service
+      - build-portal
+    if: |
+      always() &&
+      needs.detect-changes.outputs.has-changes == 'true' &&
+      !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Deploy API Lambda
+        if: needs.detect-changes.outputs.api == 'true'
+        run: |
+          echo "Deploying API to staging..."
+          # aws lambda update-function-code \
+          #   --function-name nedlia-staging-api \
+          #   --zip-file fileb://artifacts/api-build/api-deployment.zip
+
+      - name: Deploy Workers Lambda
+        if: needs.detect-changes.outputs.workers == 'true'
+        run: |
+          echo "Deploying Workers to staging..."
+          # aws lambda update-function-code \
+          #   --function-name nedlia-staging-workers \
+          #   --zip-file fileb://artifacts/workers-build/workers-deployment.zip
+
+      - name: Deploy Placement Service
+        if: needs.detect-changes.outputs.placement-service == 'true'
+        run: |
+          echo "Deploying Placement Service to staging..."
+          # docker load -i artifacts/placement-service-build/placement-service.tar
+          # Push to ECR and update ECS
+
+      - name: Deploy Validation Service
+        if: needs.detect-changes.outputs.validation-service == 'true'
+        run: |
+          echo "Deploying Validation Service to staging..."
+
+      - name: Deploy Notification Service
+        if: needs.detect-changes.outputs.notification-service == 'true'
+        run: |
+          echo "Deploying Notification Service to staging..."
+
+      - name: Deploy Portal
+        if: needs.detect-changes.outputs.portal == 'true'
+        run: |
+          echo "Deploying Portal to staging..."
+          # aws s3 sync artifacts/portal-build/ s3://nedlia-staging-portal --delete
+          # aws cloudfront create-invalidation --distribution-id $CF_ID --paths "/*"
+
+      - name: Notify Slack
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "Staging deployment ${{ job.status }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Staging Deployment*\nStatus: ${{ job.status }}\nCommit: `${{ github.sha }}`\nTriggered by: ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
+
+  # ===========================================================================
+  # Integration Tests
+  # ===========================================================================
+  integration-tests:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests against staging..."
+          # curl -f https://api.staging.nedlia.com/health || exit 1
+
+      - name: Run integration tests
+        run: |
+          echo "Running integration tests..."
+          # cd tests/integration && npm test
+
+  # ===========================================================================
+  # Deploy to Production (Manual Approval Required)
+  # ===========================================================================
+  deploy-production:
+    needs:
+      - detect-changes
+      - integration-tests
+    if: |
+      always() &&
+      needs.detect-changes.outputs.has-changes == 'true' &&
+      needs.integration-tests.result == 'success'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+          aws-region: us-east-1
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to production..."
+          # Canary deployment logic here
+
+      - name: Verify deployment
+        run: |
+          echo "Verifying production deployment..."
+          # curl -f https://api.nedlia.com/health || exit 1
+
+      - name: Notify Slack
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "🚀 Production deployment ${{ job.status }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Production Deployment*\nStatus: ${{ job.status }}\nCommit: `${{ github.sha }}`\nTriggered by: ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
