@@ -158,7 +158,7 @@ jobs:
           git push || echo "Nothing to push"
 
       - name: Create GitHub Release (Draft)
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const components = '${{ steps.components.outputs.list }}'.split(',').filter(Boolean);
@@ -259,7 +259,7 @@ jobs:
           cat "$RELEASE_FILE"
 
       - name: Check sign-off comments
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             // Find the draft release
@@ -339,7 +339,7 @@ jobs:
 
       - name: Publish GitHub Release
         if: github.event.inputs.dry_run == 'false'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const releases = await github.rest.repos.listReleases({

@@ -84,7 +84,7 @@ jobs:
 
       - name: Warn on cross-project PR
         if: steps.detect-cross-project.outputs.projects_touched > 1
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const projectsTouched = ${{ steps.detect-cross-project.outputs.projects_touched }};
@@ -131,7 +131,7 @@ jobs:
 
       - name: Warn on IaC changes
         if: steps.detect-cross-project.outputs.iac_changed == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const warningMessage = `## 🔒 Infrastructure Changes Detected
