@@ -12,20 +12,6 @@
   ],
   "fileMap": {
     "projectFileMap": {
-      "nedlia-sdk-js": [
-        {
-          "file": "nedlia-sdk/javascript/README.md",
-          "hash": "14204487347861576158"
-        },
-        {
-          "file": "nedlia-sdk/javascript/project.json",
-          "hash": "11849506225020386294"
-        },
-        {
-          "file": "nedlia-sdk/javascript/src/.gitkeep",
-          "hash": "3244421341483603138"
-        }
-      ],
       "nedlia-portal": [
         {
           "file": "nedlia-front-end/portal/.prettierrc",
@@ -105,6 +91,20 @@
           "file": "nedlia-front-end/portal/vite.config.ts",
           "hash": "2140907204056496669"
         }
+      ],
+      "nedlia-sdk-js": [
+        {
+          "file": "nedlia-sdk/javascript/README.md",
+          "hash": "14204487347861576158"
+        },
+        {
+          "file": "nedlia-sdk/javascript/project.json",
+          "hash": "11849506225020386294"
+        },
+        {
+          "file": "nedlia-sdk/javascript/src/.gitkeep",
+          "hash": "3244421341483603138"
+        }
       ]
     },
     "nonProjectFiles": [
@@ -166,7 +166,7 @@
       },
       {
         "file": ".gitignore",
-        "hash": "6461755580650403780"
+        "hash": "4673651611158464923"
       },
       {
         "file": ".gitleaks.toml",
