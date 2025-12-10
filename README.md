@@ -72,37 +72,74 @@ See [Getting Started](docs/getting-started.md) for detailed setup instructions.
 
 ## Documentation
 
-### Guides
+### 🚀 Getting Started
 
 - [Getting Started](docs/getting-started.md) – Prerequisites, installation, environment setup
 - [Local Development](docs/local-development.md) – Running services locally
-- [Branching Strategy](docs/branching-strategy.md) – Trunk-based development, feature flags
-- [Code Quality](docs/code-quality.md) – SonarCloud, linting, formatting
-- [SOLID Principles](docs/SOLID-PRINCIPLES.md) – ESLint rules enforcing SOLID design
-- [Python Style Guide](docs/python-style-guide.md) – PEP 8, FastAPI patterns, type hints
-- [TypeScript Style Guide](docs/typescript-style-guide.md) – React, ESLint, Prettier, strict mode
-- [Testing Strategy](docs/testing-strategy.md) – Testing pyramid, contract tests, coverage
-- [Deployment](docs/deployment.md) – CI/CD, environments, release process
-- [Deployment Orchestration](docs/deployment-orchestration.md) – Multi-team deployment, change detection
-- [Release Management](docs/release-management.md) – Release trains, sign-offs, production governance
 
-### Architecture
+### 🏗️ Architecture
 
 - [Architecture Overview](ARCHITECTURE.md) – Clean architecture, AWS serverless, event-driven
 - [Domain Model](docs/domain-model.md) – Bounded contexts, aggregates, domain events
+- [Data Architecture](docs/data-architecture.md) – Schema design, ACID principles, event registry
 - [API Standards](docs/api-standards.md) – Versioning, errors, pagination, OpenAPI
-- [Data Architecture](docs/data-architecture.md) – Schema design, event registry, migrations
 - [Security Architecture](docs/security-architecture.md) – Auth flows, RBAC, secrets management
-- [Observability](docs/observability.md) – Logging, metrics, tracing, alerting
-- [Resilience Patterns](docs/resilience-patterns.md) – Circuit breakers, retries, fallbacks
 - [ADRs](docs/adr/) – Architecture Decision Records
 
-### Contributing
+### 📐 Design Principles
+
+- [SOLID Principles](docs/SOLID-PRINCIPLES.md) – ESLint rules enforcing SOLID design
+- [DRY Principles](docs/dry-principles.md) – Don't Repeat Yourself patterns
+
+### 💻 Development Standards
+
+- [Python Style Guide](docs/python-style-guide.md) – PEP 8, FastAPI patterns, type hints
+- [TypeScript Style Guide](docs/typescript-style-guide.md) – React, ESLint, Prettier, strict mode
+- [Code Quality](docs/code-quality.md) – SonarCloud, linting, formatting
+- [Error Handling](docs/error-handling.md) – Exception hierarchy, error codes, response formats
+- [Logging Standards](docs/logging-standards.md) – Structured logging, log levels, PII handling
+- [Dependency Injection](docs/dependency-injection.md) – DI patterns for Python and TypeScript
+
+### 🗄️ Data & Infrastructure
+
+- [Database Migrations](docs/database-migrations.md) – Alembic patterns, rollback procedures
+- [Caching Strategy](docs/caching-strategy.md) – Redis patterns, cache invalidation, TTLs
+- [Feature Flags](docs/feature-flags.md) – Gradual rollouts, kill switches
+
+### ⚡ Performance & Reliability
+
+- [Performance Guidelines](docs/performance-guidelines.md) – N+1 prevention, pagination, optimization
+- [Rate Limiting](docs/rate-limiting.md) – API rate limits, client retry policies
+- [Resilience Patterns](docs/resilience-patterns.md) – Circuit breakers, retries, fallbacks
+- [Observability](docs/observability.md) – Logging, metrics, tracing, alerting
+
+### 🧪 Testing & Quality
+
+- [Testing Strategy](docs/testing-strategy.md) – Testing pyramid, contract tests, coverage
+
+### 🚢 Deployment & Operations
+
+- [Deployment](docs/deployment.md) – CI/CD, environments, release process
+- [Deployment Orchestration](docs/deployment-orchestration.md) – Multi-team deployment, change detection
+- [Release Management](docs/release-management.md) – Release trains, sign-offs, production governance
+- [Branching Strategy](docs/branching-strategy.md) – Trunk-based development
+- [Incident Response](docs/incident-response.md) – On-call procedures, escalation, postmortems
+
+### 🌐 Frontend
+
+- [Accessibility](docs/accessibility.md) – WCAG 2.1 AA compliance, screen readers
+- [Internationalization](docs/internationalization.md) – i18n patterns, locale formatting
+
+### 🔒 Compliance
+
+- [Data Retention & GDPR](docs/data-retention.md) – Data lifecycle, user rights, anonymization
+
+### 🤝 Contributing
 
 - [Contributing Guide](CONTRIBUTING.md) – Branch naming, PR workflow, conventional commits
 - [Pull Request Guidelines](docs/pull-request-guidelines.md) – PR title, description, review
 
-### Policies
+### 📋 Policies
 
 - [Security Policy](SECURITY.md) – Vulnerability reporting
 - [Code of Conduct](CODE_OF_CONDUCT.md) – Community standards

@@ -14,6 +14,164 @@ This document defines data modeling, event schemas, and data management strategi
 | High availability  | ✅ Multi-AZ by default      |
 | Performance        | ✅ Sub-millisecond latency  |
 
+---
+
+## ACID Principles
+
+ACID guarantees data integrity in database transactions. Aurora PostgreSQL provides full ACID compliance.
+
+### The Four Properties
+
+| Property        | Description                                                              | Example                                                |
+| --------------- | ------------------------------------------------------------------------ | ------------------------------------------------------ |
+| **Atomicity**   | All operations in a transaction succeed or all fail together             | Creating placement + publishing event = all or nothing |
+| **Consistency** | Database moves from one valid state to another; constraints are enforced | Foreign keys, check constraints always satisfied       |
+| **Isolation**   | Concurrent transactions don't interfere with each other                  | Two users editing same placement see consistent data   |
+| **Durability**  | Committed transactions survive system failures                           | Data persists after crash or power loss                |
+
+### Atomicity in Practice
+
+```python
+# ✅ Good: All operations in one transaction
+async def create_placement_with_event(
+    session: AsyncSession,
+    data: PlacementCreate,
+) -> Placement:
+    async with session.begin():  # Transaction starts
+        # 1. Create placement
+        placement = Placement(**data.model_dump())
+        session.add(placement)
+        await session.flush()  # Get ID without committing
+
+        # 2. Log event (same transaction)
+        event = EventLog(
+            event_type="placement.created",
+            aggregate_type="placement",
+            aggregate_id=placement.id,
+            data={"placement_id": str(placement.id)},
+        )
+        session.add(event)
+
+        # Transaction commits here - both or neither
+    return placement
+
+
+# ❌ Bad: Separate transactions can leave inconsistent state
+async def create_placement_bad(session: AsyncSession, data: PlacementCreate):
+    placement = Placement(**data.model_dump())
+    session.add(placement)
+    await session.commit()  # Committed
+
+    # If this fails, we have a placement without an event!
+    event = EventLog(...)
+    session.add(event)
+    await session.commit()
+```
+
+### Consistency: Constraints
+
+Use database constraints as the last line of defense:
+
+```sql
+-- Check constraints ensure valid data
+CONSTRAINT chk_time_range CHECK (end_time > start_time AND start_time >= 0)
+CONSTRAINT chk_budget CHECK (spent <= budget)
+CONSTRAINT chk_status CHECK (status IN ('draft', 'active', 'archived'))
+
+-- Foreign keys ensure referential integrity
+FOREIGN KEY (video_id) REFERENCES videos(id)
+FOREIGN KEY (product_id) REFERENCES products(id)
+
+-- Unique constraints prevent duplicates
+UNIQUE (video_id, product_id, start_time, end_time)
+```
+
+### Isolation Levels
+
+PostgreSQL supports multiple isolation levels. We use **Read Committed** (default) for most operations:
+
+| Level            | Dirty Reads | Non-Repeatable Reads | Phantom Reads | Use Case                    |
+| ---------------- | ----------- | -------------------- | ------------- | --------------------------- |
+| Read Uncommitted | Possible    | Possible             | Possible      | Never use                   |
+| Read Committed   | ❌          | Possible             | Possible      | Default, most operations    |
+| Repeatable Read  | ❌          | ❌                   | Possible      | Reports, aggregations       |
+| Serializable     | ❌          | ❌                   | ❌            | Financial, critical updates |
+
+```python
+# Use higher isolation for critical operations
+from sqlalchemy import text
+
+async def transfer_budget(
+    session: AsyncSession,
+    from_campaign_id: UUID,
+    to_campaign_id: UUID,
+    amount: Decimal,
+) -> None:
+    # Set isolation level for this transaction
+    await session.execute(text("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE"))
+
+    async with session.begin():
+        from_campaign = await session.get(Campaign, from_campaign_id, with_for_update=True)
+        to_campaign = await session.get(Campaign, to_campaign_id, with_for_update=True)
+
+        if from_campaign.budget - from_campaign.spent < amount:
+            raise InsufficientBudgetError()
+
+        from_campaign.budget -= amount
+        to_campaign.budget += amount
+```
+
+### Optimistic Locking
+
+Use version columns to prevent lost updates:
+
+```python
+# Domain entity with version
+@dataclass
+class Placement:
+    id: UUID
+    version: int = 1
+    # ... other fields
+
+    def update(self, **changes) -> None:
+        for key, value in changes.items():
+            setattr(self, key, value)
+        self.version += 1
+
+
+# Repository checks version on update
+async def update(self, placement: Placement) -> Placement:
+    result = await self.session.execute(
+        update(PlacementModel)
+        .where(
+            PlacementModel.id == placement.id,
+            PlacementModel.version == placement.version - 1,  # Expected version
+        )
+        .values(
+            **placement.to_dict(),
+            version=placement.version,
+        )
+        .returning(PlacementModel)
+    )
+
+    if result.rowcount == 0:
+        raise OptimisticLockError(
+            f"Placement {placement.id} was modified by another transaction"
+        )
+
+    return placement
+```
+
+### Durability: Write-Ahead Logging
+
+Aurora PostgreSQL uses write-ahead logging (WAL) to ensure durability:
+
+- Transactions are written to WAL before commit confirmation
+- WAL is replicated to 6 storage nodes across 3 AZs
+- Point-in-time recovery available up to 35 days
+
+---
+
 ### Schema Design Principles
 
 1. **Normalize for writes, denormalize for reads** (CQRS)
