@@ -56,5 +56,9 @@
     "**/dist": true,
     "**/.venv": true,
     "**/__pycache__": true
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "onelasha",
+    "projectKey": "onelasha_Nedlia"
   }
 }

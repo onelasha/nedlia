@@ -65,6 +65,8 @@ See [Getting Started](docs/getting-started.md) for detailed setup instructions.
 | **Infrastructure** | AWS (Lambda, API Gateway, S3, SQS), Terraform    |
 | **Plugins**        | Swift, SwiftUI (macOS/iOS)                       |
 | **SDKs**           | JavaScript, Python, Swift                        |
+| **Monorepo**       | Nx, pnpm workspaces                              |
+| **Code Quality**   | ESLint (SOLID enforcement), Ruff, Prettier       |
 
 ---
 
@@ -76,6 +78,7 @@ See [Getting Started](docs/getting-started.md) for detailed setup instructions.
 - [Local Development](docs/local-development.md) – Running services locally
 - [Branching Strategy](docs/branching-strategy.md) – Trunk-based development, feature flags
 - [Code Quality](docs/code-quality.md) – SonarCloud, linting, formatting
+- [SOLID Principles](docs/SOLID-PRINCIPLES.md) – ESLint rules enforcing SOLID design
 - [Python Style Guide](docs/python-style-guide.md) – PEP 8, FastAPI patterns, type hints
 - [TypeScript Style Guide](docs/typescript-style-guide.md) – React, ESLint, Prettier, strict mode
 - [Testing Strategy](docs/testing-strategy.md) – Testing pyramid, contract tests, coverage
@@ -150,6 +153,8 @@ tests/
 - [x] Developer best practices (linting, formatting, pre-commit hooks)
 - [x] CI/CD pipeline (GitHub Actions)
 - [x] Infrastructure as Code (Terraform + Terragrunt)
+- [x] Nx monorepo with module boundary enforcement
+- [x] SOLID principles enforcement via ESLint
 - [ ] FastAPI backend implementation
 - [ ] React portal implementation
 - [ ] Video editor plugins (Final Cut Pro, DaVinci, LumaFusion)

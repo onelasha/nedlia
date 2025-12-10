@@ -4,6 +4,9 @@ dist/
 .build/
 .cache/
 
+# Nx
+.nx/
+
 # Python
 .venv/
 venv/

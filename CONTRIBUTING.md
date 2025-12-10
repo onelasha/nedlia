@@ -105,9 +105,9 @@ For complete PR guidelines including description format, review process, and exa
 
 ## Code Style
 
-- **JS/TS**: ESLint + Prettier (configured per project).
-- **Python**: Ruff + Black.
-- **Swift**: SwiftLint (optional).
+- **JS/TS**: ESLint + Prettier (configured per project)
+- **Python**: Ruff + Black
+- **Swift**: SwiftLint (optional)
 
 Run formatters before committing:
 
@@ -115,6 +115,36 @@ Run formatters before committing:
 pnpm format
 cd nedlia-back-end/python && ruff format .
 ```
+
+## Nx Monorepo
+
+This project uses **Nx** for monorepo management. Common commands:
+
+```bash
+# Lint all projects
+pnpm nx run-many -t lint
+
+# Lint only affected projects
+pnpm nx affected -t lint
+
+# Build all projects
+pnpm nx run-many -t build
+
+# View dependency graph
+pnpm nx graph
+```
+
+## SOLID Principles
+
+ESLint enforces SOLID principles via rules for:
+
+- **Single Responsibility**: `max-lines`, `max-lines-per-function`, `complexity`
+- **Open/Closed**: `explicit-member-accessibility`, TypeScript strict mode
+- **Liskov Substitution**: `explicit-function-return-type`
+- **Interface Segregation**: `consistent-type-definitions`, `no-empty-interface`
+- **Dependency Inversion**: `@nx/enforce-module-boundaries`, `import/no-cycle`
+
+See [SOLID Principles](docs/SOLID-PRINCIPLES.md) for full details.
 
 ## Architecture Rules
 
