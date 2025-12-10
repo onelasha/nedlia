@@ -1,0 +1,4 @@
+packages:
+  - 'nedlia-back-end/nestjs'
+  - 'nedlia-front-end/web'
+  - 'nedlia-sdk/js'

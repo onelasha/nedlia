@@ -101,11 +101,32 @@ python --version  # Should be 3.11.x
 # Check uv
 uv --version
 
+# Check Nx
+pnpm nx --version
+
 # Lint all code
-make lint
+pnpm nx run-many -t lint
 
 # Run tests
 make test
+```
+
+## Nx Monorepo
+
+This project uses **Nx** for monorepo management with enforced module boundaries.
+
+```bash
+# View all projects
+pnpm nx show projects
+
+# Lint all projects
+pnpm nx run-many -t lint
+
+# Lint only affected projects (faster for PRs)
+pnpm nx affected -t lint
+
+# View project dependency graph
+pnpm nx graph
 ```
 
 ## IDE Setup
@@ -143,6 +164,7 @@ Now every commit will be automatically checked for:
 - [Local Development](local-development.md) – Running services locally
 - [Testing](testing.md) – Running and writing tests
 - [Architecture](../ARCHITECTURE.md) – Understanding the codebase structure
+- [SOLID Principles](SOLID-PRINCIPLES.md) – ESLint rules enforcing SOLID design
 - [Contributing](../CONTRIBUTING.md) – How to submit changes
 
 ## Troubleshooting

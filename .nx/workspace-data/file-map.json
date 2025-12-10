@@ -1,0 +1,714 @@
+{
+  "version": "6.0",
+  "nxVersion": "22.2.0",
+  "pathMappings": {},
+  "nxJsonPlugins": [
+    {
+      "name": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    }
+  ],
+  "fileMap": {
+    "projectFileMap": {
+      "nedlia-sdk-js": [
+        {
+          "file": "nedlia-sdk/javascript/README.md",
+          "hash": "14204487347861576158"
+        },
+        {
+          "file": "nedlia-sdk/javascript/project.json",
+          "hash": "11849506225020386294"
+        },
+        {
+          "file": "nedlia-sdk/javascript/src/.gitkeep",
+          "hash": "3244421341483603138"
+        }
+      ],
+      "nedlia-portal": [
+        {
+          "file": "nedlia-front-end/portal/.prettierrc",
+          "hash": "1968889176328130920"
+        },
+        {
+          "file": "nedlia-front-end/portal/README.md",
+          "hash": "18266894820354747282"
+        },
+        {
+          "file": "nedlia-front-end/portal/eslint.config.js",
+          "hash": "15563725608459871886"
+        },
+        {
+          "file": "nedlia-front-end/portal/index.html",
+          "hash": "16193890706580952473"
+        },
+        {
+          "file": "nedlia-front-end/portal/package.json",
+          "hash": "10385102705879580931",
+          "deps": [
+            "npm:typescript",
+            "npm:eslint",
+            "npm:@eslint/js",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:eslint-plugin-import",
+            "npm:eslint-import-resolver-typescript",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "nedlia-front-end/portal/postcss.config.js",
+          "hash": "1886002347757770194"
+        },
+        {
+          "file": "nedlia-front-end/portal/project.json",
+          "hash": "14370201495780549047"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/App.tsx",
+          "hash": "13772883043761456923"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/application/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/domain/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/index.css",
+          "hash": "7698734242956175394"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/infrastructure/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/main.tsx",
+          "hash": "6428192238747674637"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/ui/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/tailwind.config.ts",
+          "hash": "3283490696984781994"
+        },
+        {
+          "file": "nedlia-front-end/portal/tsconfig.json",
+          "hash": "12820213164694247650"
+        },
+        {
+          "file": "nedlia-front-end/portal/vite.config.ts",
+          "hash": "2140907204056496669"
+        }
+      ]
+    },
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "1563526444572442392"
+      },
+      {
+        "file": ".env.example",
+        "hash": "14032504861617069219"
+      },
+      {
+        "file": ".eslintrc.js",
+        "hash": "14456083829788844611"
+      },
+      {
+        "file": ".github/CODEOWNERS",
+        "hash": "8315191133874173008"
+      },
+      {
+        "file": ".github/ISSUE_TEMPLATE/bug_report.md",
+        "hash": "3363758741830895548"
+      },
+      {
+        "file": ".github/ISSUE_TEMPLATE/feature_request.md",
+        "hash": "5388208762332239839"
+      },
+      {
+        "file": ".github/dependabot.yml",
+        "hash": "16155688495613754670"
+      },
+      {
+        "file": ".github/pull_request_template.md",
+        "hash": "729132348117917345"
+      },
+      {
+        "file": ".github/workflows/ci.yml",
+        "hash": "6587206055528447122"
+      },
+      {
+        "file": ".github/workflows/deploy.yml",
+        "hash": "11797047270581640844"
+      },
+      {
+        "file": ".github/workflows/pr-scope-check.yml",
+        "hash": "1551815685339214332"
+      },
+      {
+        "file": ".github/workflows/pr-title.yml",
+        "hash": "14234179674060021278"
+      },
+      {
+        "file": ".github/workflows/release-train.yml",
+        "hash": "1389016925249342702"
+      },
+      {
+        "file": ".github/workflows/sonarcloud.yml",
+        "hash": "11553079587129194572"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "6461755580650403780"
+      },
+      {
+        "file": ".gitleaks.toml",
+        "hash": "3520417575810473481"
+      },
+      {
+        "file": ".nvmrc",
+        "hash": "14743000810602433389"
+      },
+      {
+        "file": ".pre-commit-config.yaml",
+        "hash": "7915453999690842310"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "13575998848887046865"
+      },
+      {
+        "file": ".python-version",
+        "hash": "15541955220390179963"
+      },
+      {
+        "file": ".swiftlint.yml",
+        "hash": "4369867761841491412"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "4135716206815624869"
+      },
+      {
+        "file": ".vscode/settings.json",
+        "hash": "10508755646969600830"
+      },
+      {
+        "file": "ARCHITECTURE.md",
+        "hash": "8370723529049176500"
+      },
+      {
+        "file": "CHANGELOG.md",
+        "hash": "8832988478333991228"
+      },
+      {
+        "file": "CODE_OF_CONDUCT.md",
+        "hash": "14544239922384218449"
+      },
+      {
+        "file": "CONTRIBUTING.md",
+        "hash": "10753772126728794484"
+      },
+      {
+        "file": "Makefile",
+        "hash": "8675824276538506844"
+      },
+      {
+        "file": "README.md",
+        "hash": "664658175008682189"
+      },
+      {
+        "file": "SECURITY.md",
+        "hash": "4378647013832913878"
+      },
+      {
+        "file": "commitlint.config.js",
+        "hash": "16532966144739811393"
+      },
+      {
+        "file": "docs/SOLID-PRINCIPLES.md",
+        "hash": "3464370125795756399"
+      },
+      {
+        "file": "docs/adr/001-clean-architecture.md",
+        "hash": "14218551175943208926"
+      },
+      {
+        "file": "docs/adr/002-aws-serverless.md",
+        "hash": "1010980482058731698"
+      },
+      {
+        "file": "docs/adr/003-event-driven.md",
+        "hash": "4471834347912267948"
+      },
+      {
+        "file": "docs/adr/004-terraform-terragrunt.md",
+        "hash": "18266011397307690743"
+      },
+      {
+        "file": "docs/adr/005-trunk-based-development.md",
+        "hash": "1333706247058095682"
+      },
+      {
+        "file": "docs/adr/006-cap-theorem-tradeoffs.md",
+        "hash": "17005016458375895440"
+      },
+      {
+        "file": "docs/adr/007-fargate-microservices.md",
+        "hash": "2868475042445588597"
+      },
+      {
+        "file": "docs/adr/README.md",
+        "hash": "2982878452359531836"
+      },
+      {
+        "file": "docs/api-standards.md",
+        "hash": "16961666022155024139"
+      },
+      {
+        "file": "docs/branching-strategy.md",
+        "hash": "16269569330766295725"
+      },
+      {
+        "file": "docs/code-quality.md",
+        "hash": "1221725760036142219"
+      },
+      {
+        "file": "docs/data-architecture.md",
+        "hash": "6993805344725302039"
+      },
+      {
+        "file": "docs/deployment-orchestration.md",
+        "hash": "11041758015116667781"
+      },
+      {
+        "file": "docs/deployment.md",
+        "hash": "16163459441884408494"
+      },
+      {
+        "file": "docs/domain-model.md",
+        "hash": "1404542295776562558"
+      },
+      {
+        "file": "docs/getting-started.md",
+        "hash": "13293997004355845390"
+      },
+      {
+        "file": "docs/local-development.md",
+        "hash": "17663806935972502812"
+      },
+      {
+        "file": "docs/observability.md",
+        "hash": "4210848637501890842"
+      },
+      {
+        "file": "docs/pull-request-guidelines.md",
+        "hash": "5338914414225713244"
+      },
+      {
+        "file": "docs/python-style-guide.md",
+        "hash": "4017786450825719900"
+      },
+      {
+        "file": "docs/release-management.md",
+        "hash": "3775264869277079197"
+      },
+      {
+        "file": "docs/resilience-patterns.md",
+        "hash": "18386709834118003547"
+      },
+      {
+        "file": "docs/security-architecture.md",
+        "hash": "10051054850704199711"
+      },
+      {
+        "file": "docs/testing-strategy.md",
+        "hash": "2198578995474697679"
+      },
+      {
+        "file": "docs/typescript-style-guide.md",
+        "hash": "9968250294494065463"
+      },
+      {
+        "file": "nedlia-IaC/LICENSE",
+        "hash": "12473389461338704436"
+      },
+      {
+        "file": "nedlia-IaC/README.md",
+        "hash": "13693067220698441017"
+      },
+      {
+        "file": "nedlia-IaC/environments/dev/env.hcl",
+        "hash": "16581912563982457771"
+      },
+      {
+        "file": "nedlia-IaC/environments/dev/terragrunt.hcl",
+        "hash": "14201251878875996468"
+      },
+      {
+        "file": "nedlia-IaC/environments/production/env.hcl",
+        "hash": "7608238846512527653"
+      },
+      {
+        "file": "nedlia-IaC/environments/production/terragrunt.hcl",
+        "hash": "14201251878875996468"
+      },
+      {
+        "file": "nedlia-IaC/environments/staging/env.hcl",
+        "hash": "1841187377875106188"
+      },
+      {
+        "file": "nedlia-IaC/environments/staging/terragrunt.hcl",
+        "hash": "14201251878875996468"
+      },
+      {
+        "file": "nedlia-IaC/environments/testing/env.hcl",
+        "hash": "6588034713826450995"
+      },
+      {
+        "file": "nedlia-IaC/environments/testing/terragrunt.hcl",
+        "hash": "14201251878875996468"
+      },
+      {
+        "file": "nedlia-IaC/modules/api-gateway/main.tf",
+        "hash": "17533822050678309926"
+      },
+      {
+        "file": "nedlia-IaC/modules/aurora/main.tf",
+        "hash": "17504908409230988739"
+      },
+      {
+        "file": "nedlia-IaC/modules/cognito/main.tf",
+        "hash": "11918006574435129779"
+      },
+      {
+        "file": "nedlia-IaC/modules/eventbridge/main.tf",
+        "hash": "9732704058088218297"
+      },
+      {
+        "file": "nedlia-IaC/modules/lambda/main.tf",
+        "hash": "4256019682223909908"
+      },
+      {
+        "file": "nedlia-IaC/modules/s3/main.tf",
+        "hash": "6123578612847136929"
+      },
+      {
+        "file": "nedlia-IaC/modules/sqs/main.tf",
+        "hash": "16512135357716711746"
+      },
+      {
+        "file": "nedlia-IaC/modules/vpc/main.tf",
+        "hash": "11672780459934456762"
+      },
+      {
+        "file": "nedlia-IaC/terragrunt.hcl",
+        "hash": "13271514856091142406"
+      },
+      {
+        "file": "nedlia-back-end/README.md",
+        "hash": "10176882205222535923"
+      },
+      {
+        "file": "nedlia-back-end/api/README.md",
+        "hash": "6999243815281887715"
+      },
+      {
+        "file": "nedlia-back-end/api/pyproject.toml",
+        "hash": "10931829940575618859"
+      },
+      {
+        "file": "nedlia-back-end/api/src/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/api/src/application/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/api/src/domain/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/api/src/infrastructure/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/api/src/interface/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/api/tests/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/services/README.md",
+        "hash": "14867013878822055800"
+      },
+      {
+        "file": "nedlia-back-end/services/docker-compose.yml",
+        "hash": "1533716490091142211"
+      },
+      {
+        "file": "nedlia-back-end/services/init-db.sql",
+        "hash": "7140054518623143396"
+      },
+      {
+        "file": "nedlia-back-end/services/localstack-init.sh",
+        "hash": "8586500966920833093"
+      },
+      {
+        "file": "nedlia-back-end/services/notification-service/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/Dockerfile",
+        "hash": "7988646563494597768"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/README.md",
+        "hash": "4113085246529318844"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/pyproject.toml",
+        "hash": "496692697984531168"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/__init__.py",
+        "hash": "17568654684211364423"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/application/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/domain/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/infrastructure/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/interface/__init__.py",
+        "hash": "10033434169634340894"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/interface/routes/__init__.py",
+        "hash": "6132113711375589677"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/interface/routes/health.py",
+        "hash": "16525791557935490462"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/interface/routes/placements.py",
+        "hash": "14006996229919731635"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/src/main.py",
+        "hash": "4090680017106294448"
+      },
+      {
+        "file": "nedlia-back-end/services/placement-service/tests/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/services/validation-service/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/shared/README.md",
+        "hash": "3587287684080461144"
+      },
+      {
+        "file": "nedlia-back-end/shared/pyproject.toml",
+        "hash": "3805923173151821641"
+      },
+      {
+        "file": "nedlia-back-end/shared/src/domain/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/shared/src/utils/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/workers/README.md",
+        "hash": "3408967976824200525"
+      },
+      {
+        "file": "nedlia-back-end/workers/pyproject.toml",
+        "hash": "10678996946818595827"
+      },
+      {
+        "file": "nedlia-back-end/workers/src/handlers/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/workers/src/tasks/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-back-end/workers/tests/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-front-end/README.md",
+        "hash": "18266814057167678813"
+      },
+      {
+        "file": "nedlia-plugin/README.md",
+        "hash": "864144591282579961"
+      },
+      {
+        "file": "nedlia-plugin/davinci/README.md",
+        "hash": "15111852746565116535"
+      },
+      {
+        "file": "nedlia-plugin/davinci/Sources/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-plugin/finalcut/README.md",
+        "hash": "11613826034079966228"
+      },
+      {
+        "file": "nedlia-plugin/finalcut/Sources/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-plugin/lumafusion/README.md",
+        "hash": "15693055577454506514"
+      },
+      {
+        "file": "nedlia-plugin/lumafusion/Sources/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-sdk/README.md",
+        "hash": "13597029463756255325"
+      },
+      {
+        "file": "nedlia-sdk/python/README.md",
+        "hash": "7357402576058043370"
+      },
+      {
+        "file": "nedlia-sdk/python/pyproject.toml",
+        "hash": "14063722661218930211"
+      },
+      {
+        "file": "nedlia-sdk/python/src/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nedlia-sdk/swift/README.md",
+        "hash": "3694051475336562957"
+      },
+      {
+        "file": "nedlia-sdk/swift/Sources/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "nx.json",
+        "hash": "16222379629909334543"
+      },
+      {
+        "file": "package.json",
+        "hash": "11205012743630708652"
+      },
+      {
+        "file": "pnpm-lock.yaml",
+        "hash": "5303671494588329634"
+      },
+      {
+        "file": "pnpm-workspace.yaml",
+        "hash": "11440162086731422452"
+      },
+      {
+        "file": "releases/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "releases/README.md",
+        "hash": "3852680875530839920"
+      },
+      {
+        "file": "ruff.toml",
+        "hash": "17276537260849807944"
+      },
+      {
+        "file": "sonar-project.properties",
+        "hash": "3765792015655961248"
+      },
+      {
+        "file": "tests/performance/README.md",
+        "hash": "4609172157593305728"
+      },
+      {
+        "file": "tests/performance/chaos/backpressure_test.py",
+        "hash": "9118751549307038503"
+      },
+      {
+        "file": "tests/performance/chaos/cold_start_test.py",
+        "hash": "8803905537634036994"
+      },
+      {
+        "file": "tests/performance/chaos/conftest.py",
+        "hash": "13140077574454611517"
+      },
+      {
+        "file": "tests/performance/chaos/idempotency_test.py",
+        "hash": "5117170343523621107"
+      },
+      {
+        "file": "tests/performance/consistency/conftest.py",
+        "hash": "12886297929983404459"
+      },
+      {
+        "file": "tests/performance/consistency/consistency_test.py",
+        "hash": "4149519002839437169"
+      },
+      {
+        "file": "tests/performance/k6/load-test.js",
+        "hash": "2534759559359318760"
+      },
+      {
+        "file": "tests/performance/k6/soak-test.js",
+        "hash": "6150953442122281358"
+      },
+      {
+        "file": "tests/performance/k6/spike-test.js",
+        "hash": "5023144750048226495"
+      },
+      {
+        "file": "tests/performance/k6/stress-test.js",
+        "hash": "17851863475040163294"
+      },
+      {
+        "file": "tests/performance/producers/event_producer.py",
+        "hash": "5278599301828589787"
+      },
+      {
+        "file": "tests/performance/pyproject.toml",
+        "hash": "8669355521031820697"
+      },
+      {
+        "file": "tests/performance/reports/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "7032098400889468598"
+      }
+    ]
+  },
+  "externalNodesHash": "6774807728716530626"
+}

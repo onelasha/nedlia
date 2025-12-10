@@ -168,11 +168,14 @@ result = unsafe_operation()  # noqa: S101
 Configuration: `.eslintrc.js`
 
 ```bash
-# Run ESLint
-pnpm lint
+# Run ESLint via Nx
+pnpm nx run-many -t lint
+
+# Lint affected projects only
+pnpm nx affected -t lint
 
 # Fix auto-fixable issues
-pnpm lint --fix
+pnpm nx run-many -t lint -- --fix
 ```
 
 Key rules enforced:
@@ -181,6 +184,37 @@ Key rules enforced:
 - Consistent import order
 - No console.log in production code
 - Proper TypeScript types
+- **SOLID principles enforcement** (see below)
+- **Nx module boundaries** for dependency inversion
+
+### SOLID Principles Enforcement
+
+ESLint is configured to enforce SOLID design principles:
+
+| Principle                 | Rules                                                                             |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| **Single Responsibility** | `max-lines: 300`, `max-lines-per-function: 50`, `complexity: 10`, `max-params: 4` |
+| **Open/Closed**           | `explicit-member-accessibility`, TypeScript strict mode                           |
+| **Liskov Substitution**   | `explicit-function-return-type`, `consistent-type-assertions`                     |
+| **Interface Segregation** | `consistent-type-definitions: interface`, `no-empty-interface`                    |
+| **Dependency Inversion**  | `@nx/enforce-module-boundaries`, `import/no-cycle`                                |
+
+See [SOLID Principles](SOLID-PRINCIPLES.md) for full documentation.
+
+### Nx Module Boundaries
+
+The `@nx/enforce-module-boundaries` rule enforces architectural constraints:
+
+```json
+// project.json - add tags to each project
+{
+  "name": "my-project",
+  "tags": ["scope:frontend", "type:feature"]
+}
+```
+
+**Scope Tags**: Control cross-domain dependencies
+**Type Tags**: Enforce architectural layer constraints
 
 ### Ruff (Python)
 
@@ -387,6 +421,8 @@ sonar.javascript.lcov.reportPaths=coverage/lcov.info
 
 ## Related Documentation
 
+- [SOLID Principles](SOLID-PRINCIPLES.md) – ESLint rules enforcing SOLID design
 - [Testing](testing.md) – Test strategy and coverage
 - [Contributing](../CONTRIBUTING.md) – Code standards
 - [Pull Request Guidelines](pull-request-guidelines.md) – PR quality checks
+- [Architecture](../ARCHITECTURE.md) – Clean architecture and module boundaries

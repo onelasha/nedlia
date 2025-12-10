@@ -1,0 +1,26 @@
+Daemon process terminated and closed the connection
+
+Messages from the log:
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.454Z - Handled json message GET_NX_CONSOLE_STATUS. Handling time: 0. Response time: 1.
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.484Z - Established a connection. Number of open connections: 2
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.484Z - Closed a connection. Number of open connections: 1
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.490Z - Closed a connection. Number of open connections: 0
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.503Z - Established a connection. Number of open connections: 1
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.504Z - Closed a connection. Number of open connections: 0
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.505Z - Established a connection. Number of open connections: 1
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.533Z - Received raw message of length 32
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.533Z - Received json message of type REQUEST_PROJECT_GRAPH
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.533Z - [REQUEST]: Client Request for Project Graph Received
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.534Z - Time taken for 'loadSpecifiedNxPlugins' 3.5715380000000323ms
+Time for 'plugin worker 6511 code loading' 6.715116000000002
+Time for 'plugin worker 6513 code loading' 7.425621000000007
+Time for 'plugin worker 6512 code loading' 6.579324
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.898Z - Started listening on: /private/var/folders/6_/ftm40yvn6pv_gc875wrwp9t80000gn/T/ae427eaaa5977835df6e/d.sock
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.902Z - [WATCHER]: Subscribed to changes within: /Users/one/Documents/ProjectsLocal/Nedlia (native)
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.902Z - Time taken for 'Load Nx Plugin: /Users/one/Documents/ProjectsLocal/Nedlia/node_modules/.pnpm/nx@22.2.0/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 374.35841100000005ms
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.903Z - [NX-CONSOLE]: Pulling latest Nx (latest) to check console status...
+[NX v22.2.0 Daemon Server] - 2025-12-10T21:54:03.904Z - Closed a connection. Number of open connections: 0
+
+
+
+More information: /Users/one/Documents/ProjectsLocal/Nedlia/.nx/workspace-data/d/daemon.log

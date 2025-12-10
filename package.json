@@ -2,11 +2,6 @@
   "name": "nedlia-monorepo",
   "private": true,
   "packageManager": "pnpm@9.0.0",
-  "workspaces": [
-    "nedlia-back-end/nestjs",
-    "nedlia-front-end/web",
-    "nedlia-sdk/js"
-  ],
   "scripts": {
     "lint": "nx lint",
     "test": "nx test",
@@ -15,6 +10,15 @@
     "affected": "nx affected"
   },
   "devDependencies": {
+    "@nx/eslint": "^22.2.0",
+    "@nx/eslint-plugin": "^22.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-boundaries": "^5.3.1",
+    "eslint-plugin-import": "^2.32.0",
     "nx": "^22.1.3"
   }
 }

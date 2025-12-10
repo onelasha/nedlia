@@ -1,0 +1,6 @@
+{
+  "name": "nedlia-sdk-js",
+  "projectType": "library",
+  "sourceRoot": "nedlia-sdk/javascript/src",
+  "tags": ["scope:shared", "type:util"]
+}

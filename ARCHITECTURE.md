@@ -254,6 +254,53 @@ terragrunt run-all apply  # Apply changes
 
 ## Enforcement
 
-- Code reviews must verify layer boundaries.
-- Linters and import rules (e.g., eslint-plugin-boundaries, Python import-linter) can automate checks.
-- CI will fail if forbidden imports are detected (once configured).
+### Nx Monorepo
+
+This project uses **Nx** for monorepo management with enforced module boundaries.
+
+```bash
+# Run lint across all projects
+pnpm nx run-many -t lint
+
+# Lint affected projects only
+pnpm nx affected -t lint
+
+# View project graph
+pnpm nx graph
+```
+
+### ESLint Module Boundaries
+
+The `@nx/enforce-module-boundaries` rule enforces dependency constraints via project tags:
+
+**Scope Tags** (which layers can depend on which):
+
+- `scope:shared` → Can only depend on `scope:shared`
+- `scope:backend` → Can depend on `scope:shared`, `scope:backend`
+- `scope:frontend` → Can depend on `scope:shared`, `scope:frontend`
+
+**Type Tags** (architectural layer constraints):
+
+- `type:feature` → Can use `type:feature`, `type:ui`, `type:data-access`, `type:util`
+- `type:ui` → Can use `type:ui`, `type:util`
+- `type:data-access` → Can use `type:data-access`, `type:util`
+- `type:util` → Can only use `type:util`
+
+Add tags to each project's `project.json`:
+
+```json
+{
+  "name": "my-project",
+  "tags": ["scope:frontend", "type:feature"]
+}
+```
+
+### SOLID Principles
+
+ESLint rules enforce SOLID principles. See [SOLID Principles](docs/SOLID-PRINCIPLES.md) for details.
+
+### Automated Checks
+
+- **ESLint**: `@nx/enforce-module-boundaries`, `import/no-cycle`, `eslint-plugin-boundaries`
+- **Python**: `ruff` with import rules (see `ruff.toml`)
+- **CI**: Lint checks run on every PR and will fail on violations

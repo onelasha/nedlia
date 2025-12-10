@@ -1,0 +1,6 @@
+{
+  "name": "nedlia-portal",
+  "projectType": "application",
+  "sourceRoot": "nedlia-front-end/portal/src",
+  "tags": ["scope:frontend", "type:feature"]
+}
