@@ -436,6 +436,202 @@
           "hash": "3244421341483603138"
         }
       ],
+      "nedlia-portal": [
+        {
+          "file": "nedlia-front-end/portal/.prettierrc",
+          "hash": "1968889176328130920"
+        },
+        {
+          "file": "nedlia-front-end/portal/README.md",
+          "hash": "18266894820354747282"
+        },
+        {
+          "file": "nedlia-front-end/portal/eslint.config.js",
+          "hash": "15563725608459871886"
+        },
+        {
+          "file": "nedlia-front-end/portal/index.html",
+          "hash": "16193890706580952473"
+        },
+        {
+          "file": "nedlia-front-end/portal/package.json",
+          "hash": "10385102705879580931",
+          "deps": [
+            "npm:typescript",
+            "npm:eslint",
+            "npm:@eslint/js",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:eslint-plugin-import",
+            "npm:eslint-import-resolver-typescript",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "nedlia-front-end/portal/postcss.config.js",
+          "hash": "1886002347757770194"
+        },
+        {
+          "file": "nedlia-front-end/portal/project.json",
+          "hash": "14370201495780549047"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/App.tsx",
+          "hash": "13772883043761456923"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/application/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/domain/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/index.css",
+          "hash": "7698734242956175394"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/infrastructure/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/main.tsx",
+          "hash": "6428192238747674637"
+        },
+        {
+          "file": "nedlia-front-end/portal/src/ui/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-front-end/portal/tailwind.config.ts",
+          "hash": "3283490696984781994"
+        },
+        {
+          "file": "nedlia-front-end/portal/tsconfig.json",
+          "hash": "12820213164694247650"
+        },
+        {
+          "file": "nedlia-front-end/portal/vite.config.ts",
+          "hash": "2140907204056496669"
+        }
+      ],
+      "nedlia-iac": [
+        {
+          "file": "nedlia-IaC/LICENSE",
+          "hash": "12473389461338704436"
+        },
+        {
+          "file": "nedlia-IaC/README.md",
+          "hash": "13693067220698441017"
+        },
+        {
+          "file": "nedlia-IaC/environments/dev/env.hcl",
+          "hash": "16581912563982457771"
+        },
+        {
+          "file": "nedlia-IaC/environments/dev/terragrunt.hcl",
+          "hash": "14201251878875996468"
+        },
+        {
+          "file": "nedlia-IaC/environments/production/env.hcl",
+          "hash": "7608238846512527653"
+        },
+        {
+          "file": "nedlia-IaC/environments/production/terragrunt.hcl",
+          "hash": "14201251878875996468"
+        },
+        {
+          "file": "nedlia-IaC/environments/staging/env.hcl",
+          "hash": "1841187377875106188"
+        },
+        {
+          "file": "nedlia-IaC/environments/staging/terragrunt.hcl",
+          "hash": "14201251878875996468"
+        },
+        {
+          "file": "nedlia-IaC/environments/testing/env.hcl",
+          "hash": "6588034713826450995"
+        },
+        {
+          "file": "nedlia-IaC/environments/testing/terragrunt.hcl",
+          "hash": "14201251878875996468"
+        },
+        {
+          "file": "nedlia-IaC/modules/api-gateway/main.tf",
+          "hash": "17533822050678309926"
+        },
+        {
+          "file": "nedlia-IaC/modules/aurora/main.tf",
+          "hash": "17504908409230988739"
+        },
+        {
+          "file": "nedlia-IaC/modules/cognito/main.tf",
+          "hash": "11918006574435129779"
+        },
+        {
+          "file": "nedlia-IaC/modules/eventbridge/main.tf",
+          "hash": "9732704058088218297"
+        },
+        {
+          "file": "nedlia-IaC/modules/lambda/main.tf",
+          "hash": "4256019682223909908"
+        },
+        {
+          "file": "nedlia-IaC/modules/s3/main.tf",
+          "hash": "6123578612847136929"
+        },
+        {
+          "file": "nedlia-IaC/modules/sqs/main.tf",
+          "hash": "16512135357716711746"
+        },
+        {
+          "file": "nedlia-IaC/modules/vpc/main.tf",
+          "hash": "11672780459934456762"
+        },
+        {
+          "file": "nedlia-IaC/project.json",
+          "hash": "6094969653973925280"
+        },
+        {
+          "file": "nedlia-IaC/terragrunt.hcl",
+          "hash": "13271514856091142406"
+        }
+      ],
+      "nedlia-plugin": [
+        {
+          "file": "nedlia-plugin/README.md",
+          "hash": "864144591282579961"
+        },
+        {
+          "file": "nedlia-plugin/davinci/README.md",
+          "hash": "15111852746565116535"
+        },
+        {
+          "file": "nedlia-plugin/davinci/Sources/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-plugin/finalcut/README.md",
+          "hash": "11613826034079966228"
+        },
+        {
+          "file": "nedlia-plugin/finalcut/Sources/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-plugin/lumafusion/README.md",
+          "hash": "15693055577454506514"
+        },
+        {
+          "file": "nedlia-plugin/lumafusion/Sources/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "nedlia-plugin/project.json",
+          "hash": "4283128410211716044"
+        }
+      ],
       "nedlia-back-end": [
         {
           "file": "nedlia-back-end/README.md",
@@ -588,202 +784,6 @@
         {
           "file": "nedlia-back-end/workers/tests/.gitkeep",
           "hash": "3244421341483603138"
-        }
-      ],
-      "nedlia-iac": [
-        {
-          "file": "nedlia-IaC/LICENSE",
-          "hash": "12473389461338704436"
-        },
-        {
-          "file": "nedlia-IaC/README.md",
-          "hash": "13693067220698441017"
-        },
-        {
-          "file": "nedlia-IaC/environments/dev/env.hcl",
-          "hash": "16581912563982457771"
-        },
-        {
-          "file": "nedlia-IaC/environments/dev/terragrunt.hcl",
-          "hash": "14201251878875996468"
-        },
-        {
-          "file": "nedlia-IaC/environments/production/env.hcl",
-          "hash": "7608238846512527653"
-        },
-        {
-          "file": "nedlia-IaC/environments/production/terragrunt.hcl",
-          "hash": "14201251878875996468"
-        },
-        {
-          "file": "nedlia-IaC/environments/staging/env.hcl",
-          "hash": "1841187377875106188"
-        },
-        {
-          "file": "nedlia-IaC/environments/staging/terragrunt.hcl",
-          "hash": "14201251878875996468"
-        },
-        {
-          "file": "nedlia-IaC/environments/testing/env.hcl",
-          "hash": "6588034713826450995"
-        },
-        {
-          "file": "nedlia-IaC/environments/testing/terragrunt.hcl",
-          "hash": "14201251878875996468"
-        },
-        {
-          "file": "nedlia-IaC/modules/api-gateway/main.tf",
-          "hash": "17533822050678309926"
-        },
-        {
-          "file": "nedlia-IaC/modules/aurora/main.tf",
-          "hash": "17504908409230988739"
-        },
-        {
-          "file": "nedlia-IaC/modules/cognito/main.tf",
-          "hash": "11918006574435129779"
-        },
-        {
-          "file": "nedlia-IaC/modules/eventbridge/main.tf",
-          "hash": "9732704058088218297"
-        },
-        {
-          "file": "nedlia-IaC/modules/lambda/main.tf",
-          "hash": "4256019682223909908"
-        },
-        {
-          "file": "nedlia-IaC/modules/s3/main.tf",
-          "hash": "6123578612847136929"
-        },
-        {
-          "file": "nedlia-IaC/modules/sqs/main.tf",
-          "hash": "16512135357716711746"
-        },
-        {
-          "file": "nedlia-IaC/modules/vpc/main.tf",
-          "hash": "11672780459934456762"
-        },
-        {
-          "file": "nedlia-IaC/project.json",
-          "hash": "6094969653973925280"
-        },
-        {
-          "file": "nedlia-IaC/terragrunt.hcl",
-          "hash": "13271514856091142406"
-        }
-      ],
-      "nedlia-plugin": [
-        {
-          "file": "nedlia-plugin/README.md",
-          "hash": "864144591282579961"
-        },
-        {
-          "file": "nedlia-plugin/davinci/README.md",
-          "hash": "15111852746565116535"
-        },
-        {
-          "file": "nedlia-plugin/davinci/Sources/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "nedlia-plugin/finalcut/README.md",
-          "hash": "11613826034079966228"
-        },
-        {
-          "file": "nedlia-plugin/finalcut/Sources/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "nedlia-plugin/lumafusion/README.md",
-          "hash": "15693055577454506514"
-        },
-        {
-          "file": "nedlia-plugin/lumafusion/Sources/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "nedlia-plugin/project.json",
-          "hash": "4283128410211716044"
-        }
-      ],
-      "nedlia-portal": [
-        {
-          "file": "nedlia-front-end/portal/.prettierrc",
-          "hash": "1968889176328130920"
-        },
-        {
-          "file": "nedlia-front-end/portal/README.md",
-          "hash": "18266894820354747282"
-        },
-        {
-          "file": "nedlia-front-end/portal/eslint.config.js",
-          "hash": "15563725608459871886"
-        },
-        {
-          "file": "nedlia-front-end/portal/index.html",
-          "hash": "16193890706580952473"
-        },
-        {
-          "file": "nedlia-front-end/portal/package.json",
-          "hash": "10385102705879580931",
-          "deps": [
-            "npm:typescript",
-            "npm:eslint",
-            "npm:@eslint/js",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:eslint-plugin-import",
-            "npm:eslint-import-resolver-typescript",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "nedlia-front-end/portal/postcss.config.js",
-          "hash": "1886002347757770194"
-        },
-        {
-          "file": "nedlia-front-end/portal/project.json",
-          "hash": "14370201495780549047"
-        },
-        {
-          "file": "nedlia-front-end/portal/src/App.tsx",
-          "hash": "13772883043761456923"
-        },
-        {
-          "file": "nedlia-front-end/portal/src/application/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "nedlia-front-end/portal/src/domain/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "nedlia-front-end/portal/src/index.css",
-          "hash": "7698734242956175394"
-        },
-        {
-          "file": "nedlia-front-end/portal/src/infrastructure/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "nedlia-front-end/portal/src/main.tsx",
-          "hash": "6428192238747674637"
-        },
-        {
-          "file": "nedlia-front-end/portal/src/ui/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "nedlia-front-end/portal/tailwind.config.ts",
-          "hash": "3283490696984781994"
-        },
-        {
-          "file": "nedlia-front-end/portal/tsconfig.json",
-          "hash": "12820213164694247650"
-        },
-        {
-          "file": "nedlia-front-end/portal/vite.config.ts",
-          "hash": "2140907204056496669"
         }
       ]
     }
