@@ -48,7 +48,7 @@ jobs:
       # Run Tests with Coverage
       # ------------------------------------------------------------------------
       - name: Run JS/TS tests with coverage
-        run: pnpm test --coverage --coverageReporters=lcov
+        run: pnpm exec nx run-many --target=test --all --parallel --codeCoverage=true || true
         continue-on-error: true
 
       - name: Run Python tests with coverage

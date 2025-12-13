@@ -1750,3 +1750,67 @@ Time for 'workspace context init' 2.7211589999999433
 Time for 'build typescript dependencies' 0.1317420000000311
 [NX v22.2.0 Daemon Server] - 2025-12-13T18:57:31.237Z - [SYNC]: collect registered sync generators
 [NX v22.2.0 Daemon Server] - 2025-12-13T18:57:31.238Z - Time taken for 'total execution time for createProjectGraph()' 18.06545300000016ms
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.334Z - [WATCHER]: .github/workflows/sonarcloud.yml was modified
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.335Z - [WATCHER]: Processing file changes in outputs
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.536Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.536Z - [REQUEST]: .github/workflows/sonarcloud.yml
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.536Z - [REQUEST]: 
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.547Z - Time taken for 'hash changed files from watcher' 0.3444219999946654ms
+Time for 'nx/core/project-json:createNodes' 0.8282750000071246
+Time for 'nx/core/package-json:createNodes' 4.103419000006397
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 5.145007999992231
+Time for '@nx/eslint/plugin:createNodes' 7.659025999993901
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.566Z - Time taken for 'build-project-configs' 18.203284999995958ms
+Time for 'build typescript dependencies' 0.0839280000072904
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.582Z - [SYNC]: collect registered sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.583Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.584Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T18:59:30.585Z - Time taken for 'total execution time for createProjectGraph()' 22.5852109999978ms
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:34.738Z - [WATCHER]: .github/workflows/sonarcloud.yml was modified
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:34.738Z - [WATCHER]: Processing file changes in outputs
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.139Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.139Z - [REQUEST]: .github/workflows/sonarcloud.yml
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.139Z - [REQUEST]: 
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.148Z - Time taken for 'hash changed files from watcher' 0.33940500000608154ms
+Time for 'nx/core/project-json:createNodes' 0.9121699999959674
+Time for 'nx/core/package-json:createNodes' 3.818682000011904
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 6.085052000009455
+Time for '@nx/eslint/plugin:createNodes' 7.991452000016579
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.167Z - Time taken for 'build-project-configs' 16.632512000011047ms
+Time for 'build typescript dependencies' 0.025216000009095296
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.180Z - [SYNC]: collect registered sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.181Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.181Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:00:35.181Z - Time taken for 'total execution time for createProjectGraph()' 20.252361999999266ms
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:20.949Z - [WATCHER]: sonar-project.properties was modified
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:20.950Z - [WATCHER]: Processing file changes in outputs
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.750Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.750Z - [REQUEST]: sonar-project.properties
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.750Z - [REQUEST]: 
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.759Z - Time taken for 'hash changed files from watcher' 0.29473299998790026ms
+Time for 'nx/core/project-json:createNodes' 0.8349539999908302
+Time for 'nx/core/package-json:createNodes' 3.3235429999767803
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 6.916138000000501
+Time for '@nx/eslint/plugin:createNodes' 10.131002999987686
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.778Z - Time taken for 'build-project-configs' 18.98342400000547ms
+Time for 'build typescript dependencies' 0.07147500000428408
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.792Z - [SYNC]: collect registered sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.793Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.793Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:21.794Z - Time taken for 'total execution time for createProjectGraph()' 18.58059100000537ms
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:27.841Z - [WATCHER]: sonar-project.properties was modified
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:27.842Z - [WATCHER]: Processing file changes in outputs
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.442Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.442Z - [REQUEST]: sonar-project.properties
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.442Z - [REQUEST]: 
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.447Z - Time taken for 'hash changed files from watcher' 0.24704899999778718ms
+Time for 'nx/core/project-json:createNodes' 0.4629269999859389
+Time for 'nx/core/package-json:createNodes' 2.045933999994304
+Time for 'nx/js/dependencies-and-lockfile:createNodes' 3.699108000000706
+Time for '@nx/eslint/plugin:createNodes' 4.722450000001118
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.458Z - Time taken for 'build-project-configs' 11.246782999980496ms
+Time for 'build typescript dependencies' 0.01530200001434423
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.467Z - [SYNC]: collect registered sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.467Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.467Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX v22.2.0 Daemon Server] - 2025-12-13T19:01:29.467Z - Time taken for 'total execution time for createProjectGraph()' 10.030744000017876ms
