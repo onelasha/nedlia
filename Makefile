@@ -2,32 +2,29 @@
 
 install:
 	pnpm install
-	cd nedlia-back-end/python && uv sync
+	cd nedlia-back-end/services/placement-service && uv sync
 	cd nedlia-sdk/python && uv sync
 
 lint:
-	pnpm lint
-	cd nedlia-back-end/python && ruff check .
-	cd nedlia-sdk/python && ruff check .
+	pnpm nx run-many -t lint
+	ruff check nedlia-back-end/ nedlia-sdk/python/ tests/
 
 test:
-	pnpm test
-	cd nedlia-back-end/python && pytest
-	cd nedlia-sdk/python && pytest
+	pnpm nx run-many -t test
+	cd nedlia-back-end/services/placement-service && pytest
+	cd tests/performance && pytest
 
 build:
-	pnpm build
+	pnpm nx run-many -t build
 
 format:
-	pnpm format
-	cd nedlia-back-end/python && ruff format .
-	cd nedlia-sdk/python && ruff format .
+	pnpm nx run-many -t format
+	ruff format nedlia-back-end/ nedlia-sdk/python/ tests/
 
 clean:
 	rm -rf node_modules
-	rm -rf nedlia-back-end/nestjs/node_modules
-	rm -rf nedlia-front-end/web/node_modules
-	rm -rf nedlia-sdk/js/node_modules
+	rm -rf **/node_modules
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type d -name ".pytest_cache" -exec rm -rf {} +
 	find . -type d -name ".venv" -exec rm -rf {} +
+	find . -type d -name ".ruff_cache" -exec rm -rf {} +
