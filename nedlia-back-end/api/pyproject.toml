@@ -27,106 +27,11 @@ dev = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-# =============================================================================
-# Ruff - Python Linter & Formatter (PEP 8 compliant)
-# =============================================================================
-[tool.ruff]
-target-version = "py311"
-line-length = 88  # Black-compatible, PEP 8 recommends 79 but 88 is modern standard
-src = ["src", "tests"]
+# Tool config (ruff, mypy, coverage) inherited from root pyproject.toml
 
-[tool.ruff.lint]
-select = [
-    # Pyflakes
-    "F",
-    # pycodestyle (PEP 8)
-    "E",      # Error
-    "W",      # Warning
-    # isort
-    "I",
-    # pep8-naming
-    "N",
-    # pydocstyle
-    "D",
-    # pyupgrade
-    "UP",
-    # flake8-bugbear
-    "B",
-    # flake8-simplify
-    "SIM",
-    # flake8-comprehensions
-    "C4",
-    # flake8-type-checking
-    "TCH",
-    # Ruff-specific
-    "RUF",
-]
-ignore = [
-    "D100",   # Missing docstring in public module
-    "D104",   # Missing docstring in public package
-    "D107",   # Missing docstring in __init__
-    "D203",   # 1 blank line required before class docstring (conflicts with D211)
-    "D213",   # Multi-line docstring summary should start at the second line (conflicts with D212)
-]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = [
-    "D",      # No docstrings required in tests
-    "S101",   # Allow assert in tests
-]
-
-[tool.ruff.lint.isort]
-known-first-party = ["src"]
-force-single-line = false
-lines-after-imports = 2
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
-
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
-skip-magic-trailing-comma = false
-line-ending = "auto"
-docstring-code-format = true
-
-# =============================================================================
-# MyPy - Static Type Checking
-# =============================================================================
-[tool.mypy]
-python_version = "3.11"
-strict = true
-warn_return_any = true
-warn_unused_ignores = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_configs = true
-
-[[tool.mypy.overrides]]
-module = ["boto3.*", "botocore.*"]
-ignore_missing_imports = true
-
-# =============================================================================
-# Pytest
-# =============================================================================
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-addopts = "-v --tb=short"
 
-# =============================================================================
-# Coverage
-# =============================================================================
 [tool.coverage.run]
 source = ["src"]
-omit = ["*/tests/*", "*/__pycache__/*"]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "if TYPE_CHECKING:",
-    "raise NotImplementedError",
-]

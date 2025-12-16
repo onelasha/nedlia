@@ -1,0 +1,108 @@
+# =============================================================================
+# Root pyproject.toml - Shared tool configuration for all Python projects
+# =============================================================================
+# This file contains consolidated configuration for ruff, mypy, and other tools.
+# Individual Python projects inherit these settings automatically.
+# =============================================================================
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["nedlia-back-end", "nedlia-sdk/python", "tests"]
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes
+    "F",
+    # pycodestyle (PEP 8)
+    "E",      # Error
+    "W",      # Warning
+    # isort
+    "I",
+    # pep8-naming
+    "N",
+    # pydocstyle
+    "D",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # flake8-comprehensions
+    "C4",
+    # flake8-type-checking
+    "TCH",
+    # flake8-unused-arguments
+    "ARG",
+    # Ruff-specific
+    "RUF",
+]
+ignore = [
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "D107",   # Missing docstring in __init__
+    "D203",   # 1 blank line required before class docstring (conflicts with D211)
+    "D213",   # Multi-line docstring summary should start at the second line (conflicts with D212)
+    "E501",   # line too long (handled by formatter)
+    "B008",   # do not perform function calls in argument defaults (common in FastAPI)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/**/*.py" = ["D", "S101", "ARG001"]
+"**/tests/**/*.py" = ["D", "S101", "ARG001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["nedlia", "nedlia_api", "nedlia_shared", "nedlia_workers", "nedlia_placement_service"]
+force-single-line = false
+lines-after-imports = 2
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+docstring-code-format = true
+
+# =============================================================================
+# MyPy - Static Type Checking
+# =============================================================================
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["boto3.*", "botocore.*"]
+ignore_missing_imports = true
+
+# =============================================================================
+# Pytest (default settings, can be overridden per-project)
+# =============================================================================
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "-v --tb=short"
+
+# =============================================================================
+# Coverage
+# =============================================================================
+[tool.coverage.run]
+omit = ["*/tests/*", "*/__pycache__/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
