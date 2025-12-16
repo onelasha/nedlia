@@ -1,7 +1,7 @@
 {
   "name": "nedlia-monorepo",
   "private": true,
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.26.0",
   "scripts": {
     "lint": "nx lint",
     "test": "nx test",
@@ -20,8 +20,8 @@
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-boundaries": "^5.3.1",
     "eslint-plugin-import": "^2.32.0",
+    "husky": "^8.0.0",
     "nx": "^22.2.6",
-    "project": "^0.1.6",
-    "husky": "^8.0.0"
+    "project": "^0.1.6"
   }
 }

@@ -30,13 +30,13 @@ See [Branching Strategy](docs/branching-strategy.md) for full details.
 
 Use prefixes:
 
-- `feature/` – new functionality
+- `feat/` – new functionality
 - `fix/` – bug fixes
 - `chore/` – maintenance, refactoring, tooling
 - `docs/` – documentation only
-- `experiment/` – spikes, POCs
+- `exp/` – spikes, POCs (may be discarded)
 
-Example: `feature/user-authentication`
+Example: `feat/user-authentication`
 
 ## Commit Messages
 
@@ -106,8 +106,7 @@ For complete PR guidelines including description format, review process, and exa
 ## Code Style
 
 - **JS/TS**: ESLint + Prettier (configured per project)
-- **Python**: Ruff + Black
-- **Swift**: SwiftLint (optional)
+- **Python**: Ruff (linting + formatting)
 
 Run formatters before committing:
 
