@@ -7,11 +7,11 @@ Nedlia uses **Trunk-Based Development** with **feature flags** (LaunchDarkly) an
 ```text
 main (trunk)
   │
-  ├── feature/user-auth (1-2 days) ──────┐
+  ├── feat/user-auth (1-2 days) ──────┐
   │                                      │ PR + Squash Merge
   ├──────────────────────────────────────┘
   │
-  ├── feature/pr-analysis (2-3 days) ────┐
+  ├── feat/pr-analysis (2-3 days) ────┐
   │                                      │ PR + Squash Merge
   ├──────────────────────────────────────┘
   │
@@ -53,13 +53,13 @@ Continuous deployment to staging → production
 <type>/<short-description>
 ```
 
-| Type          | Purpose                         | Example                   |
-| ------------- | ------------------------------- | ------------------------- |
-| `feature/`    | New functionality               | `feature/github-webhook`  |
-| `fix/`        | Bug fixes                       | `fix/auth-redirect-loop`  |
-| `chore/`      | Maintenance, refactoring        | `chore/upgrade-deps`      |
-| `docs/`       | Documentation only              | `docs/api-reference`      |
-| `experiment/` | Spikes, POCs (may be discarded) | `experiment/new-ai-model` |
+| Type     | Purpose                         | Example                  |
+| -------- | ------------------------------- | ------------------------ |
+| `feat/`  | New functionality               | `feat/github-webhook`    |
+| `fix/`   | Bug fixes                       | `fix/auth-redirect-loop` |
+| `chore/` | Maintenance, refactoring        | `chore/upgrade-deps`     |
+| `docs/`  | Documentation only              | `docs/api-reference`     |
+| `exp/`   | Spikes, POCs (may be discarded) | `exp/new-ai-model`       |
 
 ## Workflow
 
