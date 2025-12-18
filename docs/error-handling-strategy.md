@@ -2,6 +2,20 @@
 
 Comprehensive error handling strategies for all Nedlia project types using **industry standards**. This document provides project-specific guidance while referencing the core [Error Handling Guide](error-handling.md) and [Resilience Patterns](resilience-patterns.md).
 
+## Table of Contents
+
+- [Standards Reference](#standards-reference)
+- [1. API Services (FastAPI)](#1-api-services-fastapi)
+- [2. Lambda Workers (Event-Driven)](#2-lambda-workers-event-driven)
+- [3. JavaScript SDK (TypeScript)](#3-javascript-sdk-typescript)
+- [4. Python SDK](#4-python-sdk)
+- [5. Swift SDK](#5-swift-sdk)
+- [6. Editor Plugins (Swift)](#6-editor-plugins-swift)
+- [7. Frontend (React Portal)](#7-frontend-react-portal)
+- [Cross-Cutting Standards](#cross-cutting-standards)
+- [Related Documentation](#related-documentation)
+- [References](#references)
+
 ---
 
 ## Standards Reference

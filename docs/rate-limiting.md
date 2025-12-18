@@ -2,6 +2,22 @@
 
 Rate limiting patterns for Nedlia's API using **[IETF RateLimit Headers](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)** standard.
 
+## Table of Contents
+
+- [Principles](#principles)
+- [Rate Limit Tiers](#rate-limit-tiers)
+- [Response Headers (IETF Standard)](#response-headers-ietf-standard)
+- [Implementation](#implementation)
+- [FastAPI Middleware](#fastapi-middleware)
+- [Per-Endpoint Limits](#per-endpoint-limits)
+- [Client Retry Strategies](#client-retry-strategies)
+- [API Gateway Rate Limiting](#api-gateway-rate-limiting)
+- [Monitoring](#monitoring)
+- [Related Documentation](#related-documentation)
+- [References](#references)
+
+---
+
 ## Principles
 
 1. **Protect Resources**: Prevent abuse and ensure availability

@@ -2,6 +2,22 @@
 
 Standardized error handling patterns for Nedlia's Python backend (FastAPI, Lambda workers) and TypeScript frontend using **industry standards**.
 
+## Table of Contents
+
+- [Principles](#principles)
+- [Error Response Format (RFC 9457)](#error-response-format-rfc-9457)
+- [Problem Type Registry](#problem-type-registry)
+- [Python Exception Hierarchy (RFC 9457)](#python-exception-hierarchy-rfc-9457)
+- [FastAPI Exception Handlers (RFC 9457)](#fastapi-exception-handlers-rfc-9457)
+- [Usage Patterns](#usage-patterns)
+- [Lambda Worker Error Handling (AWS Standard)](#lambda-worker-error-handling-aws-standard)
+- [TypeScript Error Handling (RFC 9457)](#typescript-error-handling-rfc-9457)
+- [Error Logging](#error-logging)
+- [Testing Errors](#testing-errors)
+- [Related Documentation](#related-documentation)
+
+---
+
 ## Principles
 
 1. **Fail Fast**: Validate early, fail with clear messages

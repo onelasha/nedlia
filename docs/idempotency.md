@@ -2,6 +2,23 @@
 
 Idempotency patterns for Nedlia's API using the **[IETF Idempotency-Key Header](https://datatracker.ietf.org/doc/draft-ietf-httpapi-idempotency-key-header/)** standard.
 
+## Table of Contents
+
+- [What is Idempotency?](#what-is-idempotency)
+- [Why Idempotency Matters](#why-idempotency-matters)
+- [Benefits of Idempotency Keys](#benefits-of-idempotency-keys)
+- [IETF Standard: Idempotency-Key Header](#ietf-standard-idempotency-key-header)
+- [Server Behavior](#server-behavior)
+- [Error Handling (RFC 9457)](#error-handling-rfc-9457)
+- [Implementation](#implementation)
+- [Client Implementation](#client-implementation)
+- [Best Practices](#best-practices)
+- [Security Considerations](#security-considerations)
+- [Related Documentation](#related-documentation)
+- [References](#references)
+
+---
+
 ## What is Idempotency?
 
 An **idempotent operation** produces the same result regardless of how many times it's executed. In HTTP APIs:

@@ -2,6 +2,28 @@
 
 End-to-end distributed tracing for Nedlia using **[OpenTelemetry](https://opentelemetry.io/)** — the industry standard for observability.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Why OpenTelemetry?](#why-opentelemetry)
+- [W3C Trace Context Standard](#w3c-trace-context-standard)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [FastAPI Integration](#fastapi-integration)
+- [Database Query Tracing](#database-query-tracing)
+- [Lambda Worker Tracing](#lambda-worker-tracing)
+- [SQS Message Trace Propagation](#sqs-message-trace-propagation)
+- [Trace Visualization](#trace-visualization)
+- [Sampling Strategies](#sampling-strategies)
+- [Exporting to Backends](#exporting-to-backends)
+- [Debugging Slow Queries](#debugging-slow-queries)
+- [Best Practices](#best-practices)
+- [Terraform Configuration](#terraform-configuration)
+- [Related Documentation](#related-documentation)
+- [References](#references)
+
+---
+
 ## Overview
 
 OpenTelemetry enables tracing requests across:

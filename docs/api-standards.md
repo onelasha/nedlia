@@ -2,6 +2,26 @@
 
 This document defines API design standards for Nedlia services.
 
+## Table of Contents
+
+- [Principles](#principles)
+- [Versioning](#versioning)
+- [URL Structure](#url-structure)
+- [Request/Response Format](#requestresponse-format)
+- [HTTP Methods](#http-methods)
+- [Status Codes](#status-codes)
+- [Error Handling (RFC 9457)](#error-handling-rfc-9457)
+- [Pagination](#pagination)
+- [Filtering & Sorting](#filtering--sorting)
+- [Async Operations](#async-operations)
+- [Authentication](#authentication)
+- [Rate Limiting](#rate-limiting)
+- [OpenAPI Specification](#openapi-specification)
+- [HATEOAS (Optional)](#hateoas-optional)
+- [Related Documentation](#related-documentation)
+
+---
+
 ## Principles
 
 1. **Consistency**: All APIs follow the same patterns
