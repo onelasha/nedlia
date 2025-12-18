@@ -13,6 +13,8 @@ This document defines API design standards for Nedlia services.
 
 ## Versioning
 
+Nedlia uses **URL-based versioning** — the most widely adopted approach (GitHub, Stripe, Twilio, Google APIs).
+
 ### URL-Based Versioning
 
 ```
@@ -20,13 +22,35 @@ https://api.nedlia.com/v1/placements
 https://api.nedlia.com/v2/placements
 ```
 
+### Why URL Versioning?
+
+| Approach         | Pros                            | Cons                              |
+| ---------------- | ------------------------------- | --------------------------------- |
+| **URL (chosen)** | Discoverable, cacheable, simple | URL changes between versions      |
+| Header           | Clean URLs, content negotiation | Less discoverable, caching issues |
+| Media Type       | RESTful, fine-grained           | Complex, poor tooling support     |
+| Query Parameter  | Easy to implement               | Not recommended, caching issues   |
+
 ### Version Lifecycle
 
-| Phase          | Duration | Description                     |
-| -------------- | -------- | ------------------------------- |
-| **Current**    | Ongoing  | Latest stable version           |
-| **Deprecated** | 6 months | Still works, migration warnings |
-| **Sunset**     | 3 months | Read-only, then removed         |
+| Phase          | Duration | Description                     | Headers                               |
+| -------------- | -------- | ------------------------------- | ------------------------------------- |
+| **Current**    | Ongoing  | Latest stable version           | —                                     |
+| **Deprecated** | 6 months | Still works, migration warnings | `Deprecation: true`, `Sunset: <date>` |
+| **Sunset**     | 3 months | Read-only, then removed         | `Sunset: <date>`                      |
+
+### Deprecation Headers
+
+When an API version is deprecated, include standard headers:
+
+```http
+HTTP/1.1 200 OK
+Deprecation: true
+Sunset: Sat, 01 Jul 2025 00:00:00 GMT
+Link: <https://api.nedlia.com/v2/placements>; rel="successor-version"
+
+{"data": {...}}
+```
 
 ### Breaking vs Non-Breaking Changes
 
@@ -44,6 +68,16 @@ https://api.nedlia.com/v2/placements
 - Changing field types
 - Changing URL structure
 - Tightening validation
+
+### Semantic Versioning for APIs
+
+While URL uses major version only (`v1`, `v2`), internal tracking uses semver:
+
+```
+v1.0.0 → v1.1.0 (new endpoint)
+v1.1.0 → v1.2.0 (new optional field)
+v1.2.0 → v2.0.0 (breaking change)
+```
 
 ---
 

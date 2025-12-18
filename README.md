@@ -138,7 +138,7 @@ nx show project portal
 ### ⚡ Performance & Reliability
 
 - [Performance Guidelines](docs/performance-guidelines.md) – N+1 prevention, pagination, optimization
-- [Rate Limiting](docs/rate-limiting.md) – API rate limits, client retry policies
+- [Rate Limiting](docs/rate-limiting.md) – IETF RateLimit headers, quota policies
 - [Resilience Patterns](docs/resilience-patterns.md) – Circuit breakers, retries, fallbacks
 - [Observability](docs/observability.md) – Logging, metrics, tracing, alerting
 

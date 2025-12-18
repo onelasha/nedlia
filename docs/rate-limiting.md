@@ -1,13 +1,13 @@
 # Rate Limiting & Throttling
 
-Rate limiting patterns for Nedlia's API to protect against abuse and ensure fair usage.
+Rate limiting patterns for Nedlia's API using **[IETF RateLimit Headers](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)** standard.
 
 ## Principles
 
 1. **Protect Resources**: Prevent abuse and ensure availability
 2. **Fair Usage**: Distribute capacity fairly among users
 3. **Graceful Degradation**: Return helpful errors, not crashes
-4. **Transparency**: Communicate limits via headers
+4. **Standards-Based**: Use IETF RateLimit headers + RFC 9457 Problem Details
 
 ---
 
@@ -23,30 +23,73 @@ Rate limiting patterns for Nedlia's API to protect against abuse and ensure fair
 
 ---
 
-## Response Headers
+## Response Headers (IETF Standard)
 
-All responses include rate limit information:
+Nedlia uses the **[IETF RateLimit Headers draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)** standard.
+
+### RateLimit-Policy Header
+
+Advertises the quota policy:
 
 ```
-X-RateLimit-Limit: 600
-X-RateLimit-Remaining: 599
-X-RateLimit-Reset: 1705312800
+RateLimit-Policy: "default";q=600;w=60
 ```
 
-### Rate Limit Exceeded Response
+| Parameter | Description              | Example         |
+| --------- | ------------------------ | --------------- |
+| `q`       | Quota (requests allowed) | `q=600`         |
+| `w`       | Window (seconds)         | `w=60`          |
+| `qu`      | Quota unit (optional)    | `qu="requests"` |
+| `pk`      | Partition key (optional) | `pk=:base64:`   |
 
-```json
+### RateLimit Header
+
+Communicates current service limits:
+
+```
+RateLimit: "default";r=599;t=45
+```
+
+| Parameter | Description                      | Example   |
+| --------- | -------------------------------- | --------- |
+| `r`       | Remaining quota units            | `r=599`   |
+| `t`       | Time until quota reset (seconds) | `t=45`    |
+| `pk`      | Partition key (optional)         | `pk=:..:` |
+
+### Complete Response Example
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+RateLimit-Policy: "default";q=600;w=60
+RateLimit: "default";r=599;t=45
+
+{"data": {...}}
+```
+
+### Rate Limit Exceeded Response (RFC 9457)
+
+Uses RFC 9457 Problem Details with IETF-defined problem type:
+
+```http
 HTTP/1.1 429 Too Many Requests
+Content-Type: application/problem+json
 Retry-After: 30
+RateLimit-Policy: "default";q=600;w=60
+RateLimit: "default";r=0;t=30
 
 {
-  "error": {
-    "code": "RATE_LIMITED",
-    "message": "Rate limit exceeded. Retry after 30 seconds.",
-    "retry_after": 30
-  }
+  "type": "https://iana.org/assignments/http-problem-types#quota-exceeded",
+  "title": "Rate Limit Exceeded",
+  "status": 429,
+  "detail": "Request quota exceeded. Retry after 30 seconds.",
+  "instance": "/v1/placements",
+  "violated-policies": ["default"],
+  "retry_after": 30
 }
 ```
+
+> **Note**: The `type` URI `https://iana.org/assignments/http-problem-types#quota-exceeded` is the IETF-registered problem type for rate limiting.
 
 ---
 
@@ -222,28 +265,30 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         # Process request
         response = await call_next(request)
 
-        # Add rate limit headers
-        response.headers["X-RateLimit-Limit"] = str(result.limit)
-        response.headers["X-RateLimit-Remaining"] = str(result.remaining)
-        response.headers["X-RateLimit-Reset"] = str(result.reset_at)
+        # Add IETF RateLimit headers
+        policy_name = tier
+        response.headers["RateLimit-Policy"] = f'"{policy_name}";q={result.limit};w=60'
+        response.headers["RateLimit"] = f'"{policy_name}";r={result.remaining};t={result.reset_at - int(time.time())}'
 
         return response
 
-    def _rate_limit_response(self, result: RateLimitResult) -> Response:
+    def _rate_limit_response(self, result: RateLimitResult, policy_name: str = "default") -> Response:
+        """Return RFC 9457 Problem Details response for rate limiting."""
         return JSONResponse(
             status_code=429,
             content={
-                "error": {
-                    "code": "RATE_LIMITED",
-                    "message": f"Rate limit exceeded. Retry after {result.retry_after} seconds.",
-                    "retry_after": result.retry_after,
-                }
+                "type": "https://iana.org/assignments/http-problem-types#quota-exceeded",
+                "title": "Rate Limit Exceeded",
+                "status": 429,
+                "detail": f"Request quota exceeded. Retry after {result.retry_after} seconds.",
+                "violated-policies": [policy_name],
+                "retry_after": result.retry_after,
             },
+            media_type="application/problem+json",
             headers={
                 "Retry-After": str(result.retry_after),
-                "X-RateLimit-Limit": str(result.limit),
-                "X-RateLimit-Remaining": "0",
-                "X-RateLimit-Reset": str(result.reset_at),
+                "RateLimit-Policy": f'"{policy_name}";q={result.limit};w=60',
+                "RateLimit": f'"{policy_name}";r=0;t={result.retry_after}',
             },
         )
 ```
@@ -259,8 +304,8 @@ Some endpoints need different limits:
 from functools import wraps
 
 
-def rate_limit(limit: int, window: int = 60):
-    """Decorator for per-endpoint rate limiting."""
+def rate_limit(limit: int, window: int = 60, policy_name: str = "endpoint"):
+    """Decorator for per-endpoint rate limiting with IETF headers."""
 
     def decorator(func):
         @wraps(func)
@@ -272,9 +317,11 @@ def rate_limit(limit: int, window: int = 60):
             result = await rate_limiter.check(key, limit, window)
 
             if not result.allowed:
-                raise RateLimitError(
-                    message=f"Endpoint rate limit exceeded. Retry after {result.retry_after} seconds.",
+                # Raise RFC 9457 compliant rate limit exception
+                raise RateLimitException(
+                    detail=f"Endpoint rate limit exceeded. Retry after {result.retry_after} seconds.",
                     retry_after=result.retry_after,
+                    extensions={"violated-policies": [policy_name]},
                 )
 
             return await func(request, *args, **kwargs)
@@ -484,6 +531,13 @@ rate_limit_remaining = Histogram(
 ## Related Documentation
 
 - [API Standards](api-standards.md) – Error response format
-- [Error Handling](error-handling.md) – RateLimitError
+- [Error Handling](error-handling.md) – RateLimitException (RFC 9457)
+- [Error Handling Strategy](error-handling-strategy.md) – Project-specific error handling
 - [Caching Strategy](caching-strategy.md) – Redis usage
 - [Observability](observability.md) – Monitoring rate limits
+
+## References
+
+- [IETF RateLimit Headers Draft](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/) – Standard for rate limit headers
+- [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457.html) – Standard error format
+- [IANA HTTP Problem Types](https://www.iana.org/assignments/http-problem-types/) – Registered problem types including `quota-exceeded`
