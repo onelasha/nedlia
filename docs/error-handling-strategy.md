@@ -22,6 +22,55 @@ Comprehensive error handling strategies for all Nedlia project types. This docum
 
 **Location**: `nedlia-back-end/services/`, `nedlia-back-end/api/`
 
+### Error Format: Custom JSON Envelope
+
+Nedlia uses a **Custom JSON Envelope** pattern rather than RFC 7807 Problem Details.
+
+#### Why Custom Envelope over RFC 7807?
+
+| Aspect                 | Custom Envelope                           | RFC 7807 Problem Details         |
+| ---------------------- | ----------------------------------------- | -------------------------------- |
+| **Consistency**        | Matches success envelope (`data`/`error`) | Different structure from success |
+| **Simplicity**         | Flat, predictable structure               | Requires `type` URI management   |
+| **SDK ergonomics**     | Easy to parse in all languages            | `type` URIs add complexity       |
+| **Field-level errors** | Native `details` array                    | Requires extension               |
+| **Adoption**           | Stripe, GitHub, Twilio pattern            | IETF standard, less common       |
+
+#### Format Comparison
+
+```json
+// ✅ Nedlia Custom Envelope (chosen)
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Request validation failed",
+    "request_id": "req_abc123",
+    "details": [
+      { "field": "time_range.start_time", "code": "INVALID_VALUE", "message": "Start time cannot be negative" }
+    ]
+  }
+}
+
+// ❌ RFC 7807 Problem Details (not used)
+{
+  "type": "https://api.nedlia.com/errors/validation-error",
+  "title": "Validation Error",
+  "status": 400,
+  "detail": "Request validation failed",
+  "instance": "/v1/placements",
+  "request_id": "req_abc123",
+  "errors": [...]
+}
+```
+
+#### Content-Type
+
+```
+Content-Type: application/json
+```
+
+> **Note**: RFC 7807 uses `application/problem+json`. We use standard `application/json` for consistency.
+
 ### Strategy
 
 - **Global exception handlers** catch all errors and return standardized responses
