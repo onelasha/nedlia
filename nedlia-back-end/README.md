@@ -129,9 +129,6 @@ For a fresh install or to ensure all backend tools are ready:
 
 ```bash
 pnpm install:python
-````
-
-````
 
 ## Docker Compose (Local Services)
 
