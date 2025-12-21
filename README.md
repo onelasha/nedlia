@@ -30,7 +30,7 @@
 
 | Tool    | Version | Install                                                      |
 | ------- | ------- | ------------------------------------------------------------ |
-| Node.js | 20.x    | `nvm install 20`                                             |
+| Node.js | 20.x    | `nvm install 20 or higher`                                   |
 | pnpm    | 10.x    | `corepack enable && corepack prepare pnpm@latest --activate` |
 | Python  | 3.13.5  | `pyenv install 3.13.5`                                       |
 | uv      | latest  | `curl -LsSf https://astral.sh/uv/install.sh \| sh`           |
