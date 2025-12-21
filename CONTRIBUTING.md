@@ -121,11 +121,11 @@ Language-specific configs live in `tools/`:
 
 ```text
 tools/
-  js/                    # ESLint, Prettier, TSConfig, Commitlint
-  python/                # Python version, documentation
+  js/                    # ESLint, Prettier, TSConfig, Commitlint, .nvmrc
+  python/                # Shared Ruff, MyPy configs, .python-version
 ```
 
-> **Note**: `pyproject.toml` stays at root (required by `uv` for workspace resolution).
+Each Python project extends the shared config in its own `pyproject.toml`.
 
 ## Nx Monorepo
 

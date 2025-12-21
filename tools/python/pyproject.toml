@@ -1,11 +1,8 @@
 # =============================================================================
-# Python Tooling Configuration (tools/python)
+# Python Tooling Configuration
 # =============================================================================
-# This file MUST remain at repository root for uv workspace resolution.
-# See tools/python/README.md for details on why this cannot be moved.
-#
-# Contains: UV workspace, Ruff, MyPy, Pytest, Coverage configuration.
-# Individual Python projects inherit these settings automatically.
+# Centralized Python tooling: UV workspace, Ruff, MyPy, Pytest, Coverage.
+# Run `uv sync` from this directory (tools/python/) to manage Python deps.
 # =============================================================================
 
 # =============================================================================
@@ -13,12 +10,12 @@
 # =============================================================================
 [tool.uv.workspace]
 members = [
-    "nedlia-back-end/api",
-    "nedlia-back-end/shared",
-    "nedlia-back-end/workers",
-    "nedlia-back-end/services/placement-service",
-    "nedlia-sdk/python",
-    "tools/performance-tests",
+    "../../nedlia-back-end/api",
+    "../../nedlia-back-end/shared",
+    "../../nedlia-back-end/workers",
+    "../../nedlia-back-end/services/placement-service",
+    "../../nedlia-sdk/python",
+    "../performance-tests",
 ]
 
 [tool.uv]
@@ -33,7 +30,7 @@ dev-dependencies = [
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-src = ["nedlia-back-end", "nedlia-sdk/python", "tools"]
+src = ["../../nedlia-back-end", "../../nedlia-sdk/python", ".."]
 
 [tool.ruff.lint]
 select = [

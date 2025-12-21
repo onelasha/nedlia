@@ -1,46 +1,41 @@
 # Python Tooling Configuration
 
-This directory contains Python-specific tooling configuration for the Nedlia monorepo.
+Shared Python tooling configuration for the Nedlia monorepo.
 
 ## Configuration Files
 
-### Root-Level (Required by uv)
+| File                  | Purpose                                |
+| --------------------- | -------------------------------------- |
+| **`ruff.toml`**       | Shared Ruff linting & formatting rules |
+| **`mypy.ini`**        | Shared MyPy type checking settings     |
+| **`.python-version`** | Python version (3.13.5)                |
 
-The main Python configuration lives at the **repository root**:
+## Usage in Projects
 
-- **`/pyproject.toml`** - UV workspace configuration, Ruff, MyPy, Pytest, and Coverage settings
+Each Python project has its own `pyproject.toml` and manages its own dependencies via `uv`.
+Projects extend the shared configs:
 
-> **Note**: `uv` requires `pyproject.toml` at the workspace root for proper workspace member resolution.
-> This is a constraint of the Python tooling ecosystem, not a design choice.
+```toml
+# In project's pyproject.toml
+[tool.ruff]
+extend = "../../tools/python/ruff.toml"
+```
 
-### This Directory
+## Nx Orchestration
 
-- **`.python-version`** - Python version specification (used by pyenv, asdf, etc.)
-
-## Why pyproject.toml is at Root
-
-Unlike JavaScript tooling (ESLint, Prettier, TSConfig) which can be referenced from subdirectories,
-Python's `uv` workspace feature requires the `[tool.uv.workspace]` configuration to be in a
-`pyproject.toml` at the repository root to properly resolve workspace members.
-
-This is the standard pattern for Python monorepos using uv, Poetry, or similar tools.
-
-## Tools Configured
-
-| Tool         | Purpose              | Config Section              |
-| ------------ | -------------------- | --------------------------- |
-| **Ruff**     | Linting & Formatting | `[tool.ruff]`               |
-| **MyPy**     | Static Type Checking | `[tool.mypy]`               |
-| **Pytest**   | Testing              | `[tool.pytest.ini_options]` |
-| **Coverage** | Code Coverage        | `[tool.coverage.*]`         |
-
-## Usage
+All Python tasks are run via Nx, not directly from this directory:
 
 ```bash
-# From repository root
-uv sync                    # Install dependencies
-ruff check .               # Lint Python code
-ruff format .              # Format Python code
-mypy nedlia-back-end/      # Type check
-pytest                     # Run tests
+nx run placement-service:lint      # Lint a specific project
+nx run placement-service:test      # Test a specific project
+nx run-many -t lint --projects=tag:python  # Lint all Python projects
 ```
+
+## Tools
+
+| Tool       | Purpose                          |
+| ---------- | -------------------------------- |
+| **Ruff**   | Linting & Formatting             |
+| **MyPy**   | Static Type Checking             |
+| **Pytest** | Testing                          |
+| **uv**     | Package management (per-project) |

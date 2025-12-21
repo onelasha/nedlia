@@ -318,8 +318,9 @@ tools/
     commitlint.config.js # Commit message validation
     .nvmrc               # Node.js version
   python/                # Python tooling
+    ruff.toml            # Shared Ruff linting/formatting config
+    mypy.ini             # Shared MyPy type checking config
     .python-version      # Python version
-    README.md            # Python config documentation
 ```
 
-> **Note**: Python's `pyproject.toml` remains at repository root as required by `uv` for workspace resolution.
+Each Python project extends the shared config via `[tool.ruff] extend = "../../tools/python/ruff.toml"`.

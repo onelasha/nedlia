@@ -185,7 +185,7 @@ nx show project portal
 ```text
 tools/                Language-specific tooling configuration
   js/                 ESLint, Prettier, TSConfig, Commitlint, .nvmrc
-  python/             Python version (.python-version)
+  python/             Shared Ruff, MyPy configs, .python-version
   performance-tests/  Performance testing utilities
 
 nedlia-back-end/
