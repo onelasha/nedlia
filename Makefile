@@ -7,19 +7,19 @@ install:
 
 lint:
 	pnpm nx run-many -t lint
-	ruff check nedlia-back-end/ nedlia-sdk/python/ tests/
+	ruff check nedlia-back-end/ nedlia-sdk/python/ tools/performance-tests/
 
 test:
 	pnpm nx run-many -t test
 	cd nedlia-back-end/services/placement-service && pytest
-	cd tests/performance && pytest
+	cd tools/performance-tests && pytest
 
 build:
 	pnpm nx run-many -t build
 
 format:
 	pnpm nx run-many -t format
-	ruff format nedlia-back-end/ nedlia-sdk/python/ tests/
+	ruff format nedlia-back-end/ nedlia-sdk/python/ tools/performance-tests/
 
 clean:
 	rm -rf node_modules
