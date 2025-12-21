@@ -15,7 +15,7 @@ members = [
     "nedlia-back-end/workers",
     "nedlia-back-end/services/placement-service",
     "nedlia-sdk/python",
-    "tests/performance",
+    "tools/performance-tests",
 ]
 
 [tool.uv]
@@ -30,7 +30,7 @@ dev-dependencies = [
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-src = ["nedlia-back-end", "nedlia-sdk/python", "tests"]
+src = ["nedlia-back-end", "nedlia-sdk/python", "tools"]
 
 [tool.ruff.lint]
 select = [

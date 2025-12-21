@@ -5,7 +5,7 @@ Performance testing suite for Nedlia's event-driven architecture.
 ## Structure
 
 ```
-tests/performance/
+tools/performance-tests/
 ├── README.md                 # This file
 ├── k6/                       # k6 load tests
 │   ├── load-test.js          # Standard load test
@@ -29,7 +29,7 @@ tests/performance/
 
 ```bash
 # Install dependencies
-cd tests/performance
+cd tools/performance-tests
 uv sync
 
 # Run k6 load test

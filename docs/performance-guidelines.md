@@ -496,7 +496,7 @@ def after_cursor_execute(conn, cursor, statement, parameters, context, executema
 ### Load Testing with k6
 
 ```javascript
-// tests/performance/k6/api-load.js
+// tools/performance-tests/k6/api-load.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 

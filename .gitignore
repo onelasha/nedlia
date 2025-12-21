@@ -36,10 +36,10 @@ poetry.toml
 !.vscode/launch.json
 
 # Test reports
-tests/performance/reports/*.json
-tests/performance/reports/*.html
-tests/performance/reports/*.md
-!tests/performance/reports/.gitkeep
+tools/performance-tests/reports/*.json
+tools/performance-tests/reports/*.html
+tools/performance-tests/reports/*.md
+!tools/performance-tests/reports/.gitkeep
 
 # Coverage
 coverage/

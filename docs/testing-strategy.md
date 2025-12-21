@@ -708,7 +708,7 @@ class PlacementSimulation extends Simulation {
 For Python teams:
 
 ```python
-# tests/performance/locustfile.py
+# tools/performance-tests/locustfile.py
 from locust import HttpUser, task, between
 
 class PlacementUser(HttpUser):
@@ -738,7 +738,7 @@ locust -f locustfile.py --host=http://localhost:8000 --headless -u 100 -r 10 -t 
 ### k6 Load Test Example
 
 ```javascript
-// tests/performance/load-test.js
+// tools/performance-tests/k6/load-test.js
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { Rate, Trend } from 'k6/metrics';
@@ -809,25 +809,25 @@ export function handleSummary(data) {
 
 ```bash
 # Baseline (single VU)
-k6 run --vus 1 --duration 30s tests/performance/load-test.js
+k6 run --vus 1 --duration 30s tools/performance-tests/k6/load-test.js
 
 # Load test
-k6 run tests/performance/load-test.js
+k6 run tools/performance-tests/k6/load-test.js
 
 # Stress test (find breaking point)
-k6 run --vus 200 --duration 10m tests/performance/load-test.js
+k6 run --vus 200 --duration 10m tools/performance-tests/k6/load-test.js
 
 # Spike test
-k6 run --stage 1m:10,10s:200,1m:200,10s:10 tests/performance/load-test.js
+k6 run --stage 1m:10,10s:200,1m:200,10s:10 tools/performance-tests/k6/load-test.js
 
 # With environment
-k6 run -e BASE_URL=https://api.staging.nedlia.com tests/performance/load-test.js
+k6 run -e BASE_URL=https://api.staging.nedlia.com tools/performance-tests/k6/load-test.js
 ```
 
 ### Soak Test Configuration
 
 ```javascript
-// tests/performance/soak-test.js
+// tools/performance-tests/k6/soak-test.js
 export const options = {
   stages: [
     { duration: '5m', target: 50 }, // Ramp up
@@ -889,7 +889,7 @@ jobs:
       - name: Run k6 load test
         uses: grafana/k6-action@v0.3.1
         with:
-          filename: tests/performance/load-test.js
+          filename: tools/performance-tests/k6/load-test.js
         env:
           BASE_URL: ${{ secrets.STAGING_API_URL }}
 
@@ -993,7 +993,7 @@ Every event MUST carry a correlation ID for tracing:
 Don't just fire events—verify the system reaches consistent state:
 
 ```python
-# tests/performance/consistency_test.py
+# tools/performance-tests/consistency/consistency_test.py
 import asyncio
 import time
 from uuid import uuid4
@@ -1076,7 +1076,7 @@ class ConsistencyTester:
 Custom producer for controlled event injection:
 
 ```python
-# tests/performance/event_producer.py
+# tools/performance-tests/producers/event_producer.py
 import asyncio
 import boto3
 import json
@@ -1194,7 +1194,7 @@ async def main():
 ### Cold Start & Scale-Up Testing
 
 ```python
-# tests/performance/cold_start_test.py
+# tools/performance-tests/chaos/cold_start_test.py
 async def test_lambda_cold_starts():
     """
     Force cold starts by:
@@ -1251,7 +1251,7 @@ async def test_fargate_scale_up():
 ### Backpressure & Failure Testing
 
 ```python
-# tests/performance/backpressure_test.py
+# tools/performance-tests/chaos/backpressure_test.py
 async def test_slow_consumer():
     """
     Simulate slow downstream consumer:
@@ -1311,7 +1311,7 @@ async def test_downstream_failure():
 ### Idempotency Testing Under Load
 
 ```python
-# tests/performance/idempotency_test.py
+# tools/performance-tests/chaos/idempotency_test.py
 async def test_duplicate_event_handling():
     """
     Verify idempotency under load:
@@ -1344,7 +1344,7 @@ async def test_duplicate_event_handling():
 ### Cost Estimation Under Load
 
 ```python
-# tests/performance/cost_estimator.py
+# tools/performance-tests/cost_estimator.py
 def estimate_cost(metrics: dict) -> dict:
     """Estimate AWS cost based on load test metrics."""
 
