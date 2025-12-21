@@ -52,7 +52,7 @@ jobs:
         run: pnpm exec nx run-many -t lint --projects="tag:lang:typescript"
 
       - name: Type check
-        run: pnpm exec tsc --noEmit
+        run: pnpm exec nx run-many -t typecheck --projects="tag:lang:typescript"
 
   lint-python:
     name: Lint Python
@@ -77,6 +77,9 @@ jobs:
 
       - name: Lint all Python projects
         run: pnpm exec nx run-many -t lint --projects="tag:lang:python"
+
+      - name: Type check all Python projects
+        run: pnpm exec nx run-many -t typecheck --projects="tag:lang:python"
 
   lint-terraform:
     name: Lint Terraform
