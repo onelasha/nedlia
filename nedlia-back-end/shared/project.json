@@ -31,6 +31,14 @@
         "command": "uv run mypy src/",
         "cwd": "nedlia-back-end/shared"
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "uv run pytest",
+        "cwd": "nedlia-back-end/shared"
+      },
+      "dependsOn": ["install"]
     }
   }
 }
