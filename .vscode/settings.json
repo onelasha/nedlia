@@ -61,8 +61,8 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "onelasha",
     "projectKey": "onelasha_nedlia-back-end"
-  },
-  "python.testing.pytestArgs": ["nedlia-back-end"],
-  "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
+  }
+  // "python.testing.pytestArgs": ["nedlia-back-end"],
+  // "python.testing.unittestEnabled": false,
+  // "python.testing.pytestEnabled": false
 }

@@ -85,15 +85,15 @@ nx show project portal
 
 ## Tech Stack
 
-| Layer              | Technologies                                     |
-| ------------------ | ------------------------------------------------ |
-| **Backend**        | FastAPI (Python), PostgreSQL (Aurora Serverless) |
-| **Frontend**       | React, TypeScript, Vite, TailwindCSS             |
-| **Infrastructure** | AWS (Lambda, API Gateway, S3, SQS), Terraform    |
-| **Plugins**        | Swift, SwiftUI (macOS/iOS)                       |
-| **SDKs**           | JavaScript, Python, Swift                        |
-| **Monorepo**       | Nx, pnpm workspaces                              |
-| **Code Quality**   | ESLint (SOLID enforcement), Ruff, Prettier       |
+| Layer              | Technologies                                              |
+| ------------------ | --------------------------------------------------------- |
+| **Backend**        | FastAPI (Python), PostgreSQL (Aurora Serverless)          |
+| **Frontend**       | React, TypeScript, Vite, TailwindCSS                      |
+| **Infrastructure** | AWS (Lambda, API Gateway, S3, SQS), Terraform             |
+| **Plugins**        | Swift, SwiftUI (macOS/iOS)                                |
+| **SDKs**           | JavaScript, Python, Swift                                 |
+| **Monorepo**       | Nx, pnpm workspaces                                       |
+| **Code Quality**   | ESLint (SOLID enforcement), Ruff, Prettier (see `tools/`) |
 
 ---
 
@@ -183,6 +183,11 @@ nx show project portal
 ## Structure
 
 ```text
+tools/                Language-specific tooling configuration
+  js/                 ESLint, Prettier, TSConfig, Commitlint, .nvmrc
+  python/             Python version (.python-version)
+  performance-tests/  Performance testing utilities
+
 nedlia-back-end/
   api/                FastAPI REST API (Lambda)
   workers/            Event-driven workers (Lambda)
@@ -206,13 +211,6 @@ nedlia-plugin/
   lumafusion/         LumaFusion plugin
 
 nedlia-IaC/           Terraform + Terragrunt infrastructure
-
-tests/
-  performance/        Performance & load testing
-    k6/               k6 load test scripts
-    consistency/      Eventual consistency tests
-    chaos/            Chaos engineering tests
-    producers/        Event producers for testing
 ```
 
 ---

@@ -105,15 +105,27 @@ For complete PR guidelines including description format, review process, and exa
 
 ## Code Style
 
-- **JS/TS**: ESLint + Prettier (configured per project)
-- **Python**: Ruff (linting + formatting)
+- **JS/TS**: ESLint + Prettier (see `tools/js/`)
+- **Python**: Ruff (see `pyproject.toml` at root)
 
 Run formatters before committing:
 
 ```bash
 pnpm format
-cd nedlia-back-end/python && ruff format .
+ruff format nedlia-back-end/
 ```
+
+### Tooling Configuration
+
+Language-specific configs live in `tools/`:
+
+```text
+tools/
+  js/                    # ESLint, Prettier, TSConfig, Commitlint
+  python/                # Python version, documentation
+```
+
+> **Note**: `pyproject.toml` stays at root (required by `uv` for workspace resolution).
 
 ## Nx Monorepo
 

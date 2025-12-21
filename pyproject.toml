@@ -1,7 +1,10 @@
 # =============================================================================
-# Root pyproject.toml - Shared tool configuration for all Python projects
+# Python Tooling Configuration (tools/python)
 # =============================================================================
-# This file contains consolidated configuration for ruff, mypy, and other tools.
+# This file MUST remain at repository root for uv workspace resolution.
+# See tools/python/README.md for details on why this cannot be moved.
+#
+# Contains: UV workspace, Ruff, MyPy, Pytest, Coverage configuration.
 # Individual Python projects inherit these settings automatically.
 # =============================================================================
 

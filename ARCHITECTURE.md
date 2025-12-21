@@ -301,6 +301,25 @@ ESLint rules enforce SOLID principles. See [SOLID Principles](docs/SOLID-PRINCIP
 
 ### Automated Checks
 
-- **ESLint**: `@nx/enforce-module-boundaries`, `import/no-cycle`, `eslint-plugin-boundaries`
-- **Python**: `ruff` with import rules (see `ruff.toml`)
+- **ESLint**: `@nx/enforce-module-boundaries`, `import/no-cycle`, `eslint-plugin-boundaries` (see `tools/js/eslint.config.js`)
+- **Python**: `ruff` with import rules (see `pyproject.toml`)
 - **CI**: Lint checks run on every PR and will fail on violations
+
+### Tooling Configuration
+
+Language-specific tooling is organized under `tools/`:
+
+```text
+tools/
+  js/                    # JavaScript/TypeScript tooling
+    eslint.config.js     # ESLint with SOLID enforcement
+    prettier.config.js   # Code formatting
+    tsconfig.base.json   # Base TypeScript config
+    commitlint.config.js # Commit message validation
+    .nvmrc               # Node.js version
+  python/                # Python tooling
+    .python-version      # Python version
+    README.md            # Python config documentation
+```
+
+> **Note**: Python's `pyproject.toml` remains at repository root as required by `uv` for workspace resolution.
