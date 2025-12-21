@@ -7,10 +7,9 @@
    ```bash
    pnpm install
    ```
-3. For Python projects:
+3. For Python projects, install dependencies in each project:
    ```bash
-   cd nedlia-back-end/python && uv sync
-   cd nedlia-sdk/python && uv sync
+   cd nedlia-back-end/services/placement-service && uv sync
    ```
 
 ## Branching Strategy
@@ -106,13 +105,12 @@ For complete PR guidelines including description format, review process, and exa
 ## Code Style
 
 - **JS/TS**: ESLint + Prettier (see `tools/js/`)
-- **Python**: Ruff (see `pyproject.toml` at root)
+- **Python**: Ruff (see `tools/python/ruff.toml`)
 
-Run formatters before committing:
+Run formatters via Nx:
 
 ```bash
-pnpm format
-ruff format nedlia-back-end/
+pnpm nx run-many -t format
 ```
 
 ### Tooling Configuration
@@ -123,9 +121,19 @@ Language-specific configs live in `tools/`:
 tools/
   js/                    # ESLint, Prettier, TSConfig, Commitlint, .nvmrc
   python/                # Shared Ruff, MyPy configs, .python-version
+  security/              # Gitleaks secrets detection
 ```
 
 Each Python project extends the shared config in its own `pyproject.toml`.
+
+### Git Hooks
+
+Git hooks are managed via **husky** (JS-based, not pre-commit):
+
+- **pre-commit**: Runs gitleaks (if installed) + `nx affected -t lint`
+- **commit-msg**: Validates conventional commit format
+
+Hooks are installed automatically via `pnpm install` (runs `husky install`).
 
 ## Nx Monorepo
 
@@ -175,11 +183,10 @@ See `ARCHITECTURE.md` for details.
 - Integration tests go in Infrastructure.
 - E2E tests go in Interface or a dedicated `e2e/` folder.
 
-Run all tests:
+Run all tests via Nx:
 
 ```bash
-pnpm test
-cd nedlia-back-end/python && pytest
+pnpm nx run-many -t test
 ```
 
 ## Questions?

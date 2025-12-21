@@ -302,7 +302,7 @@ ESLint rules enforce SOLID principles. See [SOLID Principles](docs/SOLID-PRINCIP
 ### Automated Checks
 
 - **ESLint**: `@nx/enforce-module-boundaries`, `import/no-cycle`, `eslint-plugin-boundaries` (see `tools/js/eslint.config.js`)
-- **Python**: `ruff` with import rules (see `pyproject.toml`)
+- **Python**: `ruff` with import rules (see `tools/python/ruff.toml`)
 - **CI**: Lint checks run on every PR and will fail on violations
 
 ### Tooling Configuration
@@ -321,6 +321,17 @@ tools/
     ruff.toml            # Shared Ruff linting/formatting config
     mypy.ini             # Shared MyPy type checking config
     .python-version      # Python version
+  security/              # Security tooling
+    .gitleaks.toml       # Secrets detection rules
 ```
 
 Each Python project extends the shared config via `[tool.ruff] extend = "../../tools/python/ruff.toml"`.
+
+### Git Hooks
+
+Git hooks are managed via **husky** (not pre-commit):
+
+- **pre-commit**: Runs gitleaks (if installed) + `nx affected -t lint`
+- **commit-msg**: Validates conventional commit format via commitlint
+
+Hooks are configured in `.husky/` directory.

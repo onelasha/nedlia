@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Secrets detection (gitleaks)
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --config tools/security/.gitleaks.toml
+fi
+
+# Run Nx affected lint on staged files
+pnpm nx affected -t lint --base=HEAD~1

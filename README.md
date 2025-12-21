@@ -35,7 +35,6 @@ cd Nedlia
 
 # Install dependencies
 pnpm install
-cd nedlia-back-end/api && uv sync && cd ../..
 
 # Set up environment
 cp .env.example .env
@@ -186,6 +185,7 @@ nx show project portal
 tools/                Language-specific tooling configuration
   js/                 ESLint, Prettier, TSConfig, Commitlint, .nvmrc
   python/             Shared Ruff, MyPy configs, .python-version
+  security/           Gitleaks secrets detection config
   performance-tests/  Performance testing utilities
 
 nedlia-back-end/
@@ -218,7 +218,7 @@ nedlia-IaC/           Terraform + Terragrunt infrastructure
 ## Roadmap
 
 - [x] Monorepo structure with clean architecture
-- [x] Developer best practices (linting, formatting, pre-commit hooks)
+- [x] Developer best practices (linting, formatting, git hooks via husky)
 - [x] CI/CD pipeline (GitHub Actions)
 - [x] Infrastructure as Code (Terraform + Terragrunt)
 - [x] Nx monorepo with module boundary enforcement

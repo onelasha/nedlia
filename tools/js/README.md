@@ -16,7 +16,7 @@ This directory contains all JavaScript and TypeScript tooling configuration for 
 
 ### ESLint
 
-Projects can extend this config. The root `.eslintrc.cjs` redirects to this file for Nx compatibility.
+The root `.eslintrc.js` delegates to this file for Nx compatibility.
 
 ```javascript
 // In project eslint config
