@@ -1,4 +1,8 @@
 packages:
-  - 'nedlia-back-end/nestjs'
-  - 'nedlia-front-end/web'
-  - 'nedlia-sdk/js'
+  - nedlia-back-end/nestjs
+  - nedlia-front-end/web
+  - nedlia-sdk/js
+
+ignoredBuiltDependencies:
+  - nx
+  - unrs-resolver
