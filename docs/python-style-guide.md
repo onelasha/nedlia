@@ -12,6 +12,23 @@ We follow **PEP 8** with modern tooling:
 | **MyPy**   | Static type checking | `pyproject.toml` |
 | **pytest** | Testing              | `pyproject.toml` |
 
+### Why Ruff over Flake8/Black/isort?
+
+Ruff replaces **Flake8 + Black + isort + pyupgrade + autoflake** with a single tool:
+
+| Aspect         | Ruff                     | Flake8 + Black + isort  |
+| -------------- | ------------------------ | ----------------------- |
+| Speed          | 10-100x faster (Rust)    | Slow (Python)           |
+| Tools needed   | 1                        | 3+ separate tools       |
+| Config files   | 1 (`pyproject.toml`)     | Multiple configs        |
+| Rule coverage  | 800+ rules (superset)    | Fragmented plugins      |
+| Auto-fix       | Built-in                 | Requires separate tools |
+| Formatting     | Built-in (`ruff format`) | Requires Black          |
+| Import sorting | Built-in                 | Requires isort          |
+| Maintained by  | Astral (well-funded)     | Volunteers              |
+
+> ⚠️ **Flake8/Black/isort are not used in this project.** Ruff handles all linting and formatting.
+
 ---
 
 ## Quick Start
