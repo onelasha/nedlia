@@ -10,6 +10,39 @@
 
 ---
 
+## 🎯 What is Nedlia?
+
+Nedlia is an end-to-end platform that helps **brands** and **content creators** manage, validate, and track product placements in video content. Whether you're a filmmaker integrating sponsored products or a brand ensuring your placements meet contractual requirements, Nedlia streamlines the entire workflow.
+
+### The Problem
+
+Product placement in video content is a **$23B+ industry**, yet the process remains fragmented and manual:
+
+- **Brands** struggle to verify that placements meet visibility, duration, and context requirements
+- **Creators** lack tools to manage multiple placement contracts efficiently
+- **Agencies** have no standardized way to report placement performance
+
+### The Solution
+
+Nedlia provides:
+
+- **🎬 Video Editor Plugins** – Mark placements directly in Final Cut Pro, DaVinci Resolve, and LumaFusion
+- **✅ Automated Validation** – AI-powered verification that placements meet contractual specs (duration, visibility, context)
+- **📊 Analytics Dashboard** – Real-time tracking of placement performance across content
+- **🔗 SDK Integration** – Embed placement tracking in video players for live viewership data
+- **📋 Contract Management** – Centralized hub for placement agreements and compliance
+
+### Who It's For
+
+| User                     | Use Case                                                        |
+| ------------------------ | --------------------------------------------------------------- |
+| **Content Creators**     | Tag placements in editing software, generate compliance reports |
+| **Brands & Advertisers** | Validate placements, track ROI, manage campaigns                |
+| **Agencies**             | Oversee multiple creator relationships, aggregate reporting     |
+| **Streaming Platforms**  | Integrate SDK for viewer engagement metrics                     |
+
+---
+
 ## Table of Contents
 
 - [Developer Setup](#-developer-setup)
