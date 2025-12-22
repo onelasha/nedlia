@@ -5,7 +5,7 @@ from fastapi import FastAPI
 
 app = FastAPI(
     title="Nedlia API",
-    description="Product placement validation platform API",
+    description="Product placement validation platform API and saas",
     version="0.1.0",
 )
 
