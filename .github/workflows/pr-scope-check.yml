@@ -82,31 +82,30 @@ jobs:
           # Check for IaC changes specifically
           echo "iac_changed=${{ steps.changed-files.outputs.iac_any_changed }}" >> $GITHUB_OUTPUT
 
-      - name: Warn on cross-project PR
-        if: steps.detect-cross-project.outputs.projects_touched > 1
+      - name: Fail on cross-project PR
+        if: steps.detect-cross-project.outputs.projects_touched > 1 && !contains(github.event.pull_request.labels.*.name, 'cross-project')
         uses: actions/github-script@v8
         with:
           script: |
             const projectsTouched = ${{ steps.detect-cross-project.outputs.projects_touched }};
             const projectsList = "${{ steps.detect-cross-project.outputs.projects_list }}";
 
-            const warningMessage = `## ⚠️ Cross-Project PR Detected
+            const errorMessage = `## ❌ Cross-Project PR Blocked
 
             This PR touches **${projectsTouched} projects**: ${projectsList}
 
-            ### Recommendation
-            Consider splitting this PR into separate PRs for each project area:
-            - Easier to review
+            ### Why this is blocked
+            PRs must be scoped to a single project area for:
+            - Easier code review
             - Faster CI feedback
             - Clearer ownership
             - Simpler rollback if needed
 
-            ### When cross-project PRs are acceptable:
-            - Coordinated API changes (backend + SDK)
-            - Breaking changes requiring simultaneous updates
-            - Initial feature scaffolding
+            ### How to fix
+            Split this PR into separate PRs for each project area.
 
-            If this is intentional, please explain in the PR description why these changes must be together.`;
+            ### Exceptions
+            If these changes **must** be together (e.g., coordinated API changes), add the \`cross-project\` label to bypass this check.`;
 
             // Check if comment already exists
             const { data: comments } = await github.rest.issues.listComments({
@@ -117,7 +116,7 @@ jobs:
 
             const botComment = comments.find(comment =>
               comment.user.type === 'Bot' &&
-              comment.body.includes('Cross-Project PR Detected')
+              comment.body.includes('Cross-Project PR Blocked')
             );
 
             if (!botComment) {
@@ -125,9 +124,11 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                body: warningMessage
+                body: errorMessage
               });
             }
+
+            core.setFailed(`PR touches ${projectsTouched} projects (${projectsList}). Split into separate PRs or add 'cross-project' label to bypass.`);
 
       - name: Warn on IaC changes
         if: steps.detect-cross-project.outputs.iac_changed == 'true'
