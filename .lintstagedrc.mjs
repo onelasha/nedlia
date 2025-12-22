@@ -16,13 +16,17 @@ export default {
 
     if (portalFiles.length > 0) {
       commands.push(
-        `eslint --config nedlia-front-end/portal/eslint.config.js --fix --max-warnings=0 ${portalFiles.map((f) => `"${f}"`).join(" ")}`,
+        `eslint --config nedlia-front-end/portal/eslint.config.js --fix --max-warnings=0 ${portalFiles.join(
+          " ",
+        )}`,
       );
     }
 
     if (otherFrontEndFiles.length > 0) {
       commands.push(
-        `eslint --config tools/js/eslint.config.js --fix --max-warnings=0 ${otherFrontEndFiles.map((f) => `"${f}"`).join(" ")}`,
+        `eslint --config tools/js/eslint.config.js --fix --max-warnings=0 ${otherFrontEndFiles.join(
+          " ",
+        )}`,
       );
     }
 
