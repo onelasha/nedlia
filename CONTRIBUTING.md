@@ -128,10 +128,12 @@ Each Python project extends the shared config in its own `pyproject.toml`.
 
 ### Git Hooks
 
-Git hooks are managed via **husky** (JS-based, not pre-commit):
+Git hooks are managed via **husky** + **lint-staged**:
 
-- **pre-commit**: Runs gitleaks (if installed) + `nx affected -t lint`
+- **pre-commit**: Runs gitleaks (if installed) + lint-staged (lints only staged files)
 - **commit-msg**: Validates conventional commit format
+
+lint-staged runs ESLint on JS/TS files and Ruff on Python files—only for staged changes. Full `nx affected` validation runs in CI.
 
 Hooks are installed automatically via `pnpm install` (runs `husky install`).
 

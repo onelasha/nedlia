@@ -279,33 +279,35 @@ uv run ruff format .
 
 ## Pre-commit Hooks
 
-Pre-commit hooks run automatically before each commit.
+Pre-commit hooks run automatically before each commit via **husky** + **lint-staged**.
 
 ### Setup
 
-```bash
-# Install pre-commit
-pip install pre-commit
+Hooks are installed automatically with `pnpm install`. To manually install:
 
-# Install hooks
-pre-commit install
-pre-commit install --hook-type commit-msg
+```bash
+pnpm exec husky install
 ```
 
 ### What Runs
 
-| Hook                  | Purpose                       |
-| --------------------- | ----------------------------- |
-| `trailing-whitespace` | Remove trailing whitespace    |
-| `end-of-file-fixer`   | Ensure files end with newline |
-| `check-yaml`          | Validate YAML syntax          |
-| `check-json`          | Validate JSON syntax          |
-| `gitleaks`            | Detect secrets                |
-| `ruff`                | Python linting                |
-| `ruff-format`         | Python formatting             |
-| `eslint`              | JS/TS linting                 |
-| `prettier`            | JS/TS formatting              |
-| `commitlint`          | Validate commit message       |
+We use **lint-staged** to run linters only on staged files (fast commits):
+
+| File Pattern        | Command                            | Purpose                     |
+| ------------------- | ---------------------------------- | --------------------------- |
+| `*.{js,jsx,ts,tsx}` | `eslint --fix`                     | JS/TS linting               |
+| `*.py`              | `ruff check --fix` + `ruff format` | Python linting & formatting |
+| `*.md`              | `prettier --write`                 | Markdown formatting         |
+| `*.json`            | `prettier --write`                 | JSON formatting             |
+
+Additional hooks:
+
+| Hook           | Purpose                              |
+| -------------- | ------------------------------------ |
+| **gitleaks**   | Detect secrets in staged files       |
+| **commitlint** | Validate conventional commit message |
+
+> **Note**: Full `nx affected -t lint test` runs in CI, not locally. This keeps commits fast while CI ensures comprehensive validation.
 
 ### Bypassing Hooks (Emergency Only)
 

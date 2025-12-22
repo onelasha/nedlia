@@ -148,8 +148,20 @@ Git hooks are managed via **husky** and installed automatically with `pnpm insta
 
 | Hook           | Purpose                                                                      |
 | -------------- | ---------------------------------------------------------------------------- |
-| **pre-commit** | Runs gitleaks (secrets detection) + `nx affected -t lint`                    |
+| **pre-commit** | Runs gitleaks (secrets detection) + lint-staged (lints only staged files)    |
 | **commit-msg** | Validates [conventional commit](https://www.conventionalcommits.org/) format |
+
+### lint-staged
+
+We use **lint-staged** to run linters only on staged files, making commits fast:
+
+| File Type           | Command              |
+| ------------------- | -------------------- |
+| `*.{js,jsx,ts,tsx}` | ESLint with auto-fix |
+| `*.py`              | Ruff check + format  |
+| `*.md`              | Prettier             |
+
+> **Note**: Full `nx affected` validation runs in CI, not locally.
 
 ### Verify hooks are installed
 
