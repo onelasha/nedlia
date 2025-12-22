@@ -14,8 +14,8 @@ export function App() {
       <main>
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <p className="text-gray-600">
-            Welcome to the Nedlia product placement saas platform. Please login
-            to continue. Also this is a beta version of the platform.
+            Welcome to the Nedlia product placement SaaS platform. Please login
+            to continue. This is currently a beta version of the platform.
           </p>
         </div>
       </main>
